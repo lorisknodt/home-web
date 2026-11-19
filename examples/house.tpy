@@ -1,0 +1,917 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PlcProjectInfo>
+	<Symbols>
+		<Symbol>
+			<Name TaskPrio="1">.DI_Bed1_Window</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Bedroom 1 window]]></Comment>
+			<IGroup>61473</IGroup>
+			<IOffset>0</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DI_Bed2_Window</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Bedroom 2 window]]></Comment>
+			<IGroup>61473</IGroup>
+			<IOffset>1</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DI_Bed3_Window</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Bedroom 3 window]]></Comment>
+			<IGroup>61473</IGroup>
+			<IOffset>2</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DI_Bed4_Window</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Bedroom 4 window]]></Comment>
+			<IGroup>61473</IGroup>
+			<IOffset>3</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DI_FrontDoor</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Front door]]></Comment>
+			<IGroup>61473</IGroup>
+			<IOffset>4</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DI_GarageDoor_Open</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Garage door]]></Comment>
+			<IGroup>61473</IGroup>
+			<IOffset>5</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DI_Garage_BackDoor</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Garage back door]]></Comment>
+			<IGroup>61473</IGroup>
+			<IOffset>6</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DI_Kitchen_Window</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Kitchen window]]></Comment>
+			<IGroup>61473</IGroup>
+			<IOffset>7</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DI_Living_PatioDoor</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Living room patio door]]></Comment>
+			<IGroup>61473</IGroup>
+			<IOffset>8</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DI_Living_Window</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Living room window]]></Comment>
+			<IGroup>61473</IGroup>
+			<IOffset>9</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DI_Office_Window</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Office window]]></Comment>
+			<IGroup>61473</IGroup>
+			<IOffset>10</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DI_Smoke_Corridor</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Corridor smoke detector]]></Comment>
+			<IGroup>61473</IGroup>
+			<IOffset>11</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DI_Smoke_Hall</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Hall smoke detector]]></Comment>
+			<IGroup>61473</IGroup>
+			<IOffset>12</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DI_Solar_Inverter</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Solar panels]]></Comment>
+			<IGroup>61473</IGroup>
+			<IOffset>13</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DI_Water_Leak</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Water detector]]></Comment>
+			<IGroup>61473</IGroup>
+			<IOffset>14</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Bath</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Bathroom]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>48</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Bath</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Bathroom]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>832</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Bath_Fan</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Bathroom fan]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>49</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Bath_Fan</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Bathroom fan]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>833</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Bath_Heater</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Bathroom heater]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>50</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Bath_Heater</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Bathroom heater]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>834</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Bath_Mirror</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Mirror LED]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>51</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Bath_Mirror</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Mirror LED]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>835</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Bed1</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Bedroom 1]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>52</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Bed1</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Bedroom 1]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>836</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Bed2</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Bedroom 2]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>53</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Bed2</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Bedroom 2]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>837</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Bed3</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Bedroom 3]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>54</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Bed3</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Bedroom 3]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>838</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Bed4</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Bedroom 4]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>55</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Bed4</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Bedroom 4]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>839</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Boiler</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Boiler room]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>56</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Boiler</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Boiler room]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>840</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Cellar</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Cellar]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>57</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Cellar</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Cellar]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>841</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Corridor</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Corridor]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>58</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Corridor</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Corridor]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>842</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Doorbell</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Doorbell]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>59</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Doorbell</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Doorbell]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>843</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Garage_Button</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Garage door push button]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>60</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Garage_Button</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Garage door push button]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>844</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Garage_Motor</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Garage door motor]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>61</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Garage_Motor</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Garage door motor]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>845</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Garage_Tube</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Garage tube light]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>62</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Garage_Tube</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Garage tube light]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>846</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Hall</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Hall]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>63</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Hall</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Hall]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>847</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Heating_Pump</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Heating pump]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>64</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Heating_Pump</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Heating pump]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>848</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Kitchen_Led</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Worktop LED]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>65</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Kitchen_Led</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Worktop LED]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>849</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Kitchen_Spots</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Kitchen spots]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>66</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Kitchen_Spots</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Kitchen spots]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>850</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Landing</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Landing]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>67</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Landing</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Landing]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>851</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Laundry</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Laundry]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>68</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Laundry</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Laundry]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>852</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Living_Ceiling</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Living room ceiling]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>69</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Living_Ceiling</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Living room ceiling]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>853</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Living_Spots</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Living room spots]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>70</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Living_Spots</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Living room spots]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>854</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Network_Power</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Network switch power]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>71</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Network_Power</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Network switch power]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>855</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Office</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Office]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>72</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Office</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Office]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>856</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Out_Entrance</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Entrance (outside)]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>73</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Out_Entrance</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Entrance (outside)]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>857</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Out_Garage</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Garage (outside)]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>74</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Out_Garage</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Garage (outside)]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>858</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Out_Terrace</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Terrace]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>75</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Out_Terrace</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Terrace]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>859</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Shutter1_Down</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Shutter 1 down (Living room patio door)]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>76</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Shutter1_Down</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Shutter 1 down (Living room patio door)]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>860</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Shutter1_Up</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Shutter 1 up (Living room patio door)]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>77</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Shutter1_Up</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Shutter 1 up (Living room patio door)]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>861</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Shutter2_Down</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Shutter 2 down (Living room window)]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>78</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Shutter2_Down</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Shutter 2 down (Living room window)]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>862</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Shutter2_Up</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Shutter 2 up (Living room window)]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>79</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Shutter2_Up</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Shutter 2 up (Living room window)]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>863</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Shutter3_Down</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Shutter 3 down (Kitchen)]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>80</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Shutter3_Down</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Shutter 3 down (Kitchen)]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>864</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Shutter3_Up</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Shutter 3 up (Kitchen)]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>81</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Shutter3_Up</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Shutter 3 up (Kitchen)]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>865</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Shutter4_Down</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Shutter 4 down (Bedroom 1)]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>82</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Shutter4_Down</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Shutter 4 down (Bedroom 1)]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>866</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Shutter4_Up</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Shutter 4 up (Bedroom 1)]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>83</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Shutter4_Up</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Shutter 4 up (Bedroom 1)]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>867</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Siren</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Alarm siren]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>84</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Siren</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Alarm siren]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>868</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Storage</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Storage room]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>85</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Storage</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Storage room]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>869</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Terrace_Socket</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Terrace socket]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>86</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_Terrace_Socket</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Terrace socket]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>870</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_WC</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[WC]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>87</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_DO_WC</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: WC]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>871</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.DO_Workshop</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Workshop]]></Comment>
+			<IGroup>61489</IGroup>
+			<IOffset>88</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name>.HMI_DO_Workshop</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[HMI: Workshop]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>872</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_Alarm_Toggle</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Alarm on/off (pulse = toggle)]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>912</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_NightAlarm_Toggle</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Night alarm on/off (pulse = toggle)]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>913</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_Holiday_Toggle</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Holiday mode on/off (pulse = toggle)]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>914</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_AllLightsOff</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[All lights off]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>920</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_OutsideLightsOn</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Outside lights on]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>921</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_ShuttersUp</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[All shutters up]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>928</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_ShuttersDown</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[All shutters down]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>929</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name>.HMI_ShuttersUp_Living</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Living room shutters up]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>930</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_ClearFaults</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Clear fault log]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>915</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_Garage_Open</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Open the garage door]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>924</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_Garage_Close</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Close the garage door]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>923</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_Alarm_Active</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Alarm is on (copy of the internal state)]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>944</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_NightAlarm_Active</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Night alarm is on (copy)]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>945</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_Holiday_Active</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Holiday mode is on (copy)]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>946</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_FireAlarm</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Fire alarm triggered]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>949</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name TaskPrio="1">.HMI_WaterAlarm</Name>
+			<Type>BOOL</Type>
+			<Comment><![CDATA[Water alarm triggered]]></Comment>
+			<IGroup>16417</IGroup>
+			<IOffset>950</IOffset>
+			<BitSize>1</BitSize>
+		</Symbol>
+		<Symbol>
+			<Name>.HMI_Version_1</Name>
+			<Type>BYTE</Type>
+			<Comment><![CDATA[Version check]]></Comment>
+			<IGroup>16416</IGroup>
+			<IOffset>103</IOffset>
+			<BitSize>8</BitSize>
+		</Symbol>
+	</Symbols>
+</PlcProjectInfo>

@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Belongs to one house: never in this public repository (see docs/INSTALL.md, "Describe your house")
+*.tpy
+!examples/house.tpy
+/house.json
+/rules.json
+/plan_default.json
+ADDRESSES.md
+*.env
+home-web-accounts.json

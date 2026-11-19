@@ -1,0 +1,1678 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<meta name="theme-color" content="#f4f3ef" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#131311" media="(prefers-color-scheme: dark)">
+<title>Home</title>
+<style>
+:root{
+  --bg:#f4f3ef; --surface:#ffffff; --ink:#1c1b19; --muted:#6f6d67; --line:#e2dfd7;
+  --wall:#2a2926; --room:#fbfaf7; --hatch:#d6d2c8;
+  --on:#e3a008; --on-soft:rgba(227,160,8,.20);
+  --ok:#3c7a57; --alert:#c43d2b; --unknown:#aaa69c;
+  --r:14px;
+  font-family:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#131311;--surface:#1c1b19;--ink:#ecebe6;--muted:#9a978f;--line:#2f2d29;
+        --wall:#d9d6cf;--room:#1f1e1b;--hatch:#3a3833;--on:#f0b429;--on-soft:rgba(240,180,41,.22);
+        --ok:#6fb38c;--alert:#ef6a57;--unknown:#6c6962;}
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased;
+     padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+button{font:inherit;color:inherit}
+[hidden]{display:none !important}
+
+/* Header */
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;
+     padding:calc(10px + env(safe-area-inset-top)) 16px 10px;background:var(--bg);border-bottom:1px solid var(--line)}
+h1{font-size:19px;font-weight:600;letter-spacing:-.015em;margin:0}
+.conn{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:7px;text-align:right}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--unknown);flex:none}
+.dot.ok{background:var(--ok)} .dot.bad{background:var(--alert)}
+.banner{margin:10px 12px 0;padding:8px 12px;border:1px dashed var(--line);border-radius:10px;font-size:12.5px;color:var(--muted)}
+.alert-banner{margin:10px 12px 0;padding:12px 14px;border-radius:12px;background:var(--alert);color:#fff;font-weight:600}
+
+/* Views: one at a time on a phone */
+.app{padding:12px 10px 24px}
+.view{display:none}
+body[data-page="home"] .v-home, body[data-page="lights"] .v-lights,
+body[data-page="actions"] .v-actions, body[data-page="info"] .v-info, body[data-page="logs"] .v-logs{display:block}
+
+/* Summary tiles */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.tile{all:unset;box-sizing:border-box;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+      padding:10px 13px 11px;display:flex;flex-direction:column;gap:1px;min-height:62px}
+.tile:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.tile .k{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.tile .v{font-size:16px;font-weight:600;font-variant-numeric:tabular-nums}
+.ok{color:var(--ok)} .alert{color:var(--alert)} .muted{color:var(--muted);font-weight:400} .on{color:var(--on)}
+
+/* Plan */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+.plan{padding:5px}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:3px;padding:3px;background:var(--bg);border-radius:11px}
+.seg button{border:0;background:transparent;padding:9px 6px;border-radius:9px;color:var(--muted);font-size:14px;cursor:pointer;
+            display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
+.seg button[aria-selected="true"]{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.1)}
+.seg .n{font-size:11px;font-weight:600;color:#1c1b19;background:var(--on);border-radius:8px;padding:0 6px;line-height:16px}
+.cap{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12px;color:var(--muted);margin:6px 6px 0}
+.link{border:0;background:none;padding:6px 0 6px 10px;font-size:13px;color:var(--ink);font-weight:500;cursor:pointer;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line)}
+.svgwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.plan.zoomed svg{width:210%}
+svg{width:100%;height:auto;display:block;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+svg.pointing{cursor:pointer}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--muted);padding:8px 6px 4px;border-top:1px solid var(--line);margin-top:4px}
+.legend i{display:inline-block;vertical-align:-1px;margin-right:5px}
+.lg-light{width:10px;height:10px;border-radius:50%;background:var(--on)}
+.lg-off{width:10px;height:10px;border-radius:50%;border:2px solid var(--muted)}
+.lg-win{width:14px;height:4px;background:var(--muted)}
+.lg-open{width:14px;height:5px;background:var(--alert)}
+
+/* Tab bar: at the bottom on a phone */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(4,1fr);
+      background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.tabs button{border:0;background:none;padding:12px 2px 13px;font-size:13px;color:var(--muted);cursor:pointer;position:relative;
+             display:flex;justify-content:center;align-items:center;gap:5px}
+.tabs button[aria-selected="true"]{color:var(--ink);font-weight:600}
+.tabs button[aria-selected="true"]::after{content:"";position:absolute;top:-1px;left:26%;right:26%;height:2px;border-radius:2px;background:var(--ink)}
+.badge{font-size:10.5px;min-width:17px;padding:0 5px;border-radius:9px;background:var(--on);color:#1c1b19;font-weight:600;line-height:16px;text-align:center}
+.badge.red{background:var(--alert);color:#fff}
+
+/* Lists */
+.head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:2px 2px 10px}
+.head h2{font-size:18px;margin:0;font-weight:600}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 12px;font-size:13.5px;cursor:pointer;min-height:40px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.danger{border-color:color-mix(in srgb,var(--alert) 45%,var(--line))}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.group{font-size:11.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:600;margin:18px 4px 7px}
+.group:first-of-type{margin-top:8px}
+.list{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.sub-h{font-size:12.5px;color:var(--muted);padding:10px 14px 0;font-weight:500}
+.li{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:50px;padding:6px 14px}
+.li + .li, .li + .sub-h{border-top:1px solid var(--line)}
+.li-name{all:unset;cursor:pointer;flex:1;min-width:0;padding:6px 0}
+.li-name:focus-visible{outline:2px solid var(--ink);border-radius:4px}
+.li .val{font-size:14px;font-weight:500;text-align:right;font-variant-numeric:tabular-nums}
+.note{font-size:12.5px;color:var(--muted);margin:10px 4px 0}
+.empty{padding:14px;color:var(--muted);font-size:14px}
+.cmds{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px}
+.cmds .btn{text-align:left;min-height:48px}
+.mini{display:flex;gap:6px;flex:none}
+.mini .btn{min-height:40px;padding:6px 12px}
+
+/* Switch */
+.switch{flex:none;width:50px;height:30px;border-radius:15px;border:0;background:var(--line);position:relative;cursor:pointer;padding:0;transition:background .15s}
+.switch span{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.3);transition:transform .15s}
+.switch[aria-checked="true"]{background:var(--on)}
+.switch[aria-checked="true"] span{transform:translateX(20px)}
+.switch:disabled{cursor:not-allowed;opacity:.5}
+.switch.unk{background:transparent;box-shadow:inset 0 0 0 2px var(--unknown)}
+.switch.unk span{background:var(--unknown);box-shadow:none}
+
+/* Sheet (when an element is touched) */
+.sheet{position:fixed;inset:0;z-index:40;background:rgba(20,20,18,.28);display:flex;align-items:flex-end;justify-content:center;
+       padding:0 8px calc(72px + env(safe-area-inset-bottom))}
+.sheet-card{width:100%;max-width:440px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px 18px 16px;
+            box-shadow:0 10px 30px rgba(0,0,0,.18);position:relative}
+.sheet .eyebrow{font-size:12px;color:var(--muted);margin:0 40px 2px 0}
+.sheet h3{font-size:18px;margin:0 40px 10px 0;font-weight:600;line-height:1.3}
+.sheet .li{padding:6px 0;min-height:46px}
+.sheet .li + .li{border-top:1px solid var(--line)}
+.sheet-close{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;border:0;background:var(--bg);cursor:pointer;font-size:19px;line-height:1;color:var(--muted)}
+.sheet .row-btns{display:flex;gap:8px;margin-top:12px}
+.sheet .row-btns .btn{flex:1}
+.list .row-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px}
+.list .row-btns .btn{text-align:left;min-height:48px}
+.list > .note{padding:0 16px 12px;margin:0}
+/* Edit mode (admins) */
+.editbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin:8px 2px 4px;padding:10px 12px;
+  border:1.5px dashed var(--ink);border-radius:12px;font-size:13px}
+.editbar .eb-btns{display:flex;gap:6px;flex-wrap:wrap}
+.cap > span:last-child{display:flex;gap:14px;flex:none;align-items:center}
+.editing .plan svg{cursor:crosshair}
+.draft{fill:none;stroke:var(--ink);stroke-width:4;stroke-dasharray:9 7}
+.field{display:flex;flex-direction:column;gap:5px;font-size:12.5px;color:var(--muted);margin:10px 0 0}
+.field input,.field select,.filters select{font:inherit;font-size:16px;color:var(--ink);padding:10px 12px;border:1px solid var(--line);
+  border-radius:10px;background:var(--surface);width:100%;box-sizing:border-box;min-width:0}
+.check{display:flex;gap:8px;align-items:center;font-size:13.5px;margin:12px 0 0}
+.ed-sub{padding:14px 0 0 !important}
+.ed-actions{margin-top:16px}
+.sheet .link{padding:10px 0 0;display:block}
+.ed-mini{min-height:34px !important;padding:4px 10px !important;font-size:12.5px !important}
+.sheet-card{max-height:calc(100vh - 40px);overflow:auto}
+/* Logs tab */
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 10px}
+.log{padding:9px 14px}
+.log + .log{border-top:1px solid var(--line)}
+.log-h{display:flex;gap:10px;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;flex-wrap:wrap}
+.log-h .tag{margin-left:auto;font-weight:600}
+.log-e{font-size:14px;margin-top:2px;overflow-wrap:anywhere}
+.log-r{font-size:12.5px;color:var(--muted);margin-top:1px}
+.log-r.warn{color:var(--alert)}
+.sheet code{display:block;font-size:11.5px;color:var(--muted);margin-top:8px}
+#tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12.5px;line-height:1.35;padding:7px 10px;border-radius:8px;opacity:0;transition:opacity .1s;max-width:260px;z-index:35}
+.toast{position:fixed;left:50%;transform:translateX(-50%);top:calc(62px + env(safe-area-inset-top));background:var(--ink);color:var(--bg);
+       font-size:13px;padding:9px 14px;border-radius:10px;z-index:50;opacity:0;transition:opacity .2s;pointer-events:none;max-width:92vw;text-align:center}
+.toast.show{opacity:1}
+
+/* Login: asked each time the page is opened */
+.login{position:fixed;inset:0;z-index:60;background:var(--bg);display:flex;align-items:center;justify-content:center;
+       padding:24px 22px calc(24px + env(safe-area-inset-bottom))}
+.login-card{width:100%;max-width:360px;display:flex;flex-direction:column;gap:14px}
+.login-card h1{font-size:26px;margin:0}
+.login-card .lg-note{margin:-6px 0 6px;color:var(--muted);font-size:13.5px}
+.login-card label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted);font-weight:500}
+.login-card input{font:inherit;font-size:16px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink)}
+.login-card input:focus{outline:2px solid var(--ink);outline-offset:1px}
+.login-card .btn{min-height:48px;font-size:15px;font-weight:600;margin-top:4px}
+.lg-err{color:var(--alert);font-size:13.5px;min-height:1.3em;margin:0}
+body.locked > :not(.login):not(script){display:none !important}
+body:not(.locked) .login{display:none}
+.switch.busy{opacity:.6}
+
+/* SVG */
+.outline{fill:none;stroke:var(--wall);stroke-width:14;stroke-linejoin:miter}
+.room{fill:var(--room);stroke:var(--wall);stroke-width:4}
+.room.hatch{fill:url(#hatch)}
+.room.sub{stroke-width:2.5;stroke-dasharray:10 8;fill:none}
+.room-label{font-size:25px;fill:var(--muted);font-weight:500;text-anchor:start;dominant-baseline:middle;pointer-events:none}
+.room-label.c{text-anchor:middle}
+.divider{stroke:var(--wall);stroke-width:2.5;stroke-dasharray:10 8}
+.stairs line{stroke:var(--wall);stroke-width:2;opacity:.45}
+.ext-label{font-size:20px;fill:var(--muted);text-anchor:middle;letter-spacing:.06em;text-transform:uppercase}
+.light-off{fill:var(--surface);stroke:var(--muted);stroke-width:3}
+.light-on{fill:var(--on);stroke:var(--on);stroke-width:3}
+.glow{fill:var(--on-soft)}
+.unk{fill:var(--surface);stroke:var(--unknown);stroke-width:3;stroke-dasharray:4 4}
+.dev-off{fill:var(--surface);stroke:var(--muted);stroke-width:3}
+.dev-on{fill:var(--on);stroke:var(--on);stroke-width:3}
+.dev-txt{font-size:16px;font-weight:600;text-anchor:middle;dominant-baseline:central;fill:var(--muted);pointer-events:none}
+.dev-on + .dev-txt{fill:#1c1b19}
+.dev-ico{color:var(--muted);fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.dev-on + .dev-ico{color:#1c1b19}
+.dev-ico .f,.ico-btn .f{fill:currentColor;stroke:none}
+.ico-txt{font-size:15px;font-weight:600;text-anchor:middle;dominant-baseline:central;fill:currentColor;stroke:none}
+.ico-note{margin:0;color:var(--muted)}
+.icons{display:grid;grid-template-columns:repeat(auto-fill,minmax(42px,1fr));gap:6px}
+.ico-btn{height:42px;padding:0;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--muted);display:grid;place-items:center;cursor:pointer}
+.ico-btn svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ico-btn[aria-checked="true"]{border:1.5px solid var(--ink);color:var(--ink)}
+.ico-btn:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
+.gap{stroke:var(--surface);stroke-width:18}
+.win-closed{stroke:var(--muted);stroke-width:8}
+.win-open{stroke:var(--alert);stroke-width:11}
+.win-unk{stroke:var(--unknown);stroke-width:8;stroke-dasharray:8 6}
+.open-tag{font-size:17px;font-weight:600;fill:var(--alert);text-anchor:middle;dominant-baseline:middle}
+.shutter{fill:var(--ink)}
+.fire-ok{fill:var(--surface);stroke:var(--muted);stroke-width:3}
+.fire-alert{fill:var(--alert);stroke:var(--alert);stroke-width:3}
+.ring{fill:none;stroke:var(--alert);stroke-width:3}
+.hl{fill:none;stroke:var(--ink);stroke-width:3}
+.door-gap{stroke:var(--room);stroke-width:9}
+.door-gap.ext{stroke-width:18}
+.door-leaf{stroke:var(--wall);stroke-width:2.5}
+.door-arc{fill:none;stroke:var(--wall);stroke-width:1.5;stroke-dasharray:5 5;opacity:.45}
+.led-off{stroke:var(--muted);stroke-width:13;stroke-linecap:round}
+.led-core{stroke:var(--surface);stroke-width:6;stroke-linecap:round}
+.led-on{stroke:var(--on);stroke-width:13;stroke-linecap:round}
+.led-glow{stroke:var(--on-soft);stroke-width:44;stroke-linecap:round}
+.led-unk{stroke:var(--unknown);stroke-width:10;stroke-dasharray:4 5}
+.guess{stroke-dasharray:3 4}
+.pulse{animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+@media (prefers-reduced-motion:reduce){.pulse{animation:none}}
+/* Small plan (phone): thicker lines and texts */
+svg.compact .ext-label{font-size:36px} svg.compact .open-tag{font-size:32px} svg.compact .dev-txt{font-size:28px}
+svg.compact .outline{stroke-width:18} svg.compact .room{stroke-width:5}
+svg.compact .gap{stroke-width:26} svg.compact .win-closed,svg.compact .win-unk{stroke-width:12} svg.compact .win-open{stroke-width:17}
+svg.compact .led-off,svg.compact .led-on{stroke-width:19} svg.compact .led-core{stroke-width:9} svg.compact .led-glow{stroke-width:62}
+svg.compact .light-off,svg.compact .light-on,svg.compact .unk,svg.compact .dev-off,svg.compact .fire-ok{stroke-width:4}
+svg.compact .door-leaf{stroke-width:3.5} svg.compact .door-arc{stroke-width:2.2}
+
+/* Desktop: plan on the left, panel on the right */
+@media (min-width:1000px){
+  body{padding-bottom:0}
+  .top{position:static;padding:18px 28px 8px;border-bottom:0}
+  h1{font-size:22px}
+  .banner,.alert-banner{margin:6px 28px 0}
+  .app{display:grid;grid-template-columns:minmax(0,1fr) 390px;gap:20px;padding:14px 28px 32px;align-items:start}
+  body[data-page] .v-home{display:block}
+  .tiles{grid-template-columns:repeat(4,1fr)}
+  .plan{padding:12px}
+  .plan svg{max-height:calc(100vh - 320px);min-height:420px}
+  #zoom{display:none}
+  .plan.zoomed svg{width:100%}
+  .side{position:sticky;top:14px;background:var(--surface);border:1px solid var(--line);border-radius:16px;max-height:calc(100vh - 28px);overflow:auto}
+  .tabs{position:sticky;top:0;grid-template-columns:repeat(3,1fr);border-top:0;border-bottom:1px solid var(--line);padding:0;border-radius:16px 16px 0 0}
+  .tabs button[data-view="home"]{display:none}
+  .tabs button[aria-selected="true"]::after{top:auto;bottom:-1px}
+  body[data-page] .side .view{display:none}
+  body[data-panel="lights"] .side .v-lights, body[data-panel="actions"] .side .v-actions, body[data-panel="info"] .side .v-info,
+  body[data-panel="logs"] .side .v-logs{display:block}
+  .side .view{padding:14px 16px 18px}
+  .side .list{border-radius:12px}
+  .sheet{padding-bottom:28px;background:rgba(20,20,18,.18)}
+  .toast{top:20px}
+}
+</style>
+</head>
+<body class="locked" data-page="home" data-panel="lights">
+<div class="login" id="login">
+  <form class="login-card" id="login-form" method="post" action="api/login" novalidate>
+    <h1 data-t="app.title"></h1>
+    <p class="lg-note" id="lg-note" data-t="login.note"></p>
+    <label><span data-t="login.user"></span><input id="lg-user" name="username" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" required></label>
+    <label><span data-t="login.pass"></span><input id="lg-pass" name="password" type="password" autocomplete="current-password" required></label>
+    <button class="btn primary" type="submit" id="lg-btn" data-t="login.submit"></button>
+    <p class="lg-err" id="lg-err" role="alert"></p>
+  </form>
+</div>
+<header class="top">
+  <h1 data-t="app.title"></h1>
+  <div class="conn"><span id="dot" class="dot"></span><span id="conn"></span></div>
+</header>
+<div class="banner" id="banner" hidden></div>
+<div class="alert-banner" id="alert" role="alert" hidden></div>
+
+<div class="app">
+  <section class="view v-home">
+    <div class="tiles" id="tiles"></div>
+    <div class="plan card">
+      <nav class="seg" id="floors" role="tablist"></nav>
+      <div class="editbar" id="editbar" hidden></div>
+      <p class="cap"><span id="cap"></span><span><button class="link" id="edit" type="button" hidden></button><button class="link" id="zoom" type="button" data-t="plan.zoom"></button></span></p>
+      <div class="svgwrap" id="svgwrap"><svg id="svg" role="img"></svg></div>
+      <div class="legend" id="legend"></div>
+    </div>
+  </section>
+  <section class="side">
+    <nav class="tabs" id="tabs" role="tablist"></nav>
+    <section class="view v-lights" id="v-lights"></section>
+    <section class="view v-actions" id="v-actions"></section>
+    <section class="view v-info" id="v-info"></section>
+    <section class="view v-logs" id="v-logs"></section>
+  </section>
+</div>
+
+<div class="sheet" id="sheet" hidden><div class="sheet-card" role="dialog" aria-modal="true">
+  <button class="sheet-close" data-close>×</button><div id="sheet-body"></div>
+</div></div>
+<div id="tip" role="tooltip"></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+"use strict";
+/* ------------------------------------------------------------------
+   Texts of the page. The language comes from <html lang>, written by the server (HOMEWEB_LANG).
+   A value is a string with {placeholders}, or a function for plurals.
+   ------------------------------------------------------------------ */
+const I18N = {
+ en: {
+  "app.title":"Home", "login.note":"Login asked each time the page is opened.", "login.user":"Username",
+  "login.pass":"Password", "login.submit":"Log in", "login.missing":"Username and password required.",
+  "login.again":"Log in again.", "login.ended":"Session ended: log in again.",
+  "conn.connecting":"Connecting…", "conn.ok":"Controller connected · {t}", "conn.old":"No recent data · {t}",
+  "conn.down":"Controller unreachable", "server.down":"Server unreachable", "error":"Error {code}",
+  "demo.banner":"Demo mode: data simulated by the server, not the real state.",
+  "alert":"Alert: {list}", "alert.siren":"the alarm is ringing",
+  "tile.openings":"Doors and windows", "tile.open_n":n => `${n} open`, "tile.all_closed":"All closed",
+  "tile.lights":"Lights", "tile.on_n":n => `${n} on`, "tile.all_off":"All off",
+  "tile.alarm":"Alarm", "tile.ringing":"Ringing", "tile.alarm_off":"Off",
+  "tile.detectors":"Smoke and water", "tile.alert":"ALERT", "tile.nothing":"All clear",
+  "floors":"Floors", "plan.zoom":"Zoom in", "plan.unzoom":"Zoom out", "plan.edit":"Edit the plan", "plan.done":"Done",
+  "plan.label":"Floor plan",
+  "legend.on":"On", "legend.off":"Off", "legend.closed":"Closed", "legend.open":"Open", "legend.shutter":"▲▼ Shutter",
+  "legend.guess":"Dotted: to be confirmed", "legend.touch":"Touch an element for details",
+  "tab.home":"Home", "tab.lights":"Lights", "tab.actions":"Actions", "tab.info":"Info", "tab.logs":"Logs", "tabs":"Sections",
+  "outside":"Outside", "no_position":"Not placed on the plan", "others":"Others",
+  "lights.all":"All", "lights.on":"On", "lights.readonly":"Read only: {why}",
+  "lights.no_var":"the lamps have no command variable in the controller yet.",
+  "lights.unknown":"Unknown state (controller unreachable).", "lights.none_on":"No light on.",
+  "st.unknown":"unknown", "st.light_on":"On", "st.light_off":"Off", "st.dev_on":"Running", "st.dev_off":"Stopped",
+  "st.alert":"ALERT", "st.clear":"All clear", "st.closed":"Closed", "st.open":"Open", "st.not_readable":"not readable yet",
+  "plan.open_tag":"open",
+  "state":"State", "turn_on":"Turn on", "turn_off":"Turn off", "start":"Start", "stop":"Stop", "on_off":"On / off",
+  "garage":"Garage door", "garage.motor":"Motor ({sig})", "garage.motor_on":"on", "garage.motor_off":"off",
+  "garage.open":"▲ Open", "garage.close":"▼ Close", "garage.open_l":"Open", "garage.close_l":"Close",
+  "garage.note":"\"Open\" only works when the door is closed, \"Close\" only when it is open (contact {sig}).",
+  "actions":"Actions", "shutters":"Shutters", "shutter":"Shutter", "shutter.n":"Shutter {n}", "shutter.named":"Shutter {name}",
+  "shutter.up":"Up", "shutter.down":"Down", "shutter.up_a":"Raise {name}", "shutter.down_a":"Lower {name}",
+  "shutter.raising":"▲ going up", "shutter.lowering":"▼ going down", "shutter.stopped":"stopped",
+  "shutter.up_btn":"▲ Up", "shutter.down_btn":"▼ Down",
+  "devices":"Devices", "devices.note":"A confirmation is asked before each change.",
+  "missing":"Not in the PLC program yet: {list}.", "missing.address":"{name} (address missing on {state})",
+  "missing.shutter_groups":"shutter groups",
+  "actions.logged":"Each command is written to the server log.",
+  "info":"Info", "openings":"Doors and windows", "detectors":"Detectors", "shutters.none":"No shutter moving",
+  "shutters.note":"No position sensor: only a running motor is visible.",
+  "commands":"Commands", "link":"Link with the controller", "link.sim":"Simulated", "link.on":"Active", "link.off":"Inactive",
+  "program":"Controller program", "program.stopped":"Stopped", "program.running":"Running", "program.no_info":"state not reported",
+  "available":"Available commands", "blocked":"blocked", "account":"Account",
+  "to_check":"Variables to check (visible to admins):", "technical":"Technical",
+  "cancel":"Cancel", "confirm":"Confirm", "close":"Close", "edit":"Edit", "save":"Save",
+  "points_together":"{n} light points switched together.", "no_lamp_var":"No command variable for this lamp yet.",
+  "no_dev_cmd":"No web command for this device.", "place_tbc":"Position to be confirmed.", "edit_element":"Edit this element",
+  "sent":"{what}: sent", "no_visible":" (no visible change)", "light_on_t":"{name}: on", "light_off_t":"{name}: off",
+  "type.light":"Lamp", "type.dev":"Device", "type.contact":"Door / window", "type.garage":"Garage door",
+  "type.fire":"Smoke detector", "type.water":"Water detector", "type.tech":"Element without a position",
+  "kind.socket":"Socket", "kind.fan":"Fan", "kind.heater":"Heater", "kind.pump":"Pump", "kind.other":"Device",
+  "choice.light":"Lamp", "choice.led":"LED (light bar)", "choice.socket":"Socket", "choice.fan":"Fan",
+  "choice.heater":"Heater, radiator", "choice.pump":"Pump, circulator", "choice.other":"Other device",
+  "icon.socket":"Socket", "icon.fan":"Fan", "icon.radiator":"Radiator", "icon.flame":"Flame", "icon.drop":"Water drop",
+  "icon.pump":"Pump", "icon.snowflake":"Cold", "icon.bolt":"Electricity", "icon.plant":"Garden", "icon.screen":"Screen",
+  "icon.washer":"Washing machine", "icon.sun":"Sun", "icon.letter":"Letter",
+  "ed.new_device":"New device", "ed.add_device":"Add a device", "ed.edit":"Edit", "ed.type":"Type",
+  "ed.icon":"Icon on the plan", "ed.icon_named":"Icon on the plan · {name}",
+  "ed.icon_led":"An LED is always a light bar", "ed.icon_lamp":"A lamp is always a light dot",
+  "ed.icon_hint":"{what}. Choose another type (socket, fan…) to choose its icon.",
+  "ed.name":"Name", "ed.state":"State read ({kind})", "ed.output":"output", "ed.input":"input", "ed.in_out":"input or output",
+  "ed.choose":"— choose —", "ed.command":"Command ({prefix} variable)", "ed.none_ro":"— none (read only) —",
+  "ed.confirm":"Ask for a confirmation before sending", "ed.confirm_forced":" (always asked for this output)",
+  "ed.shutter":"Shutter of this window", "ed.none":"— none —", "ed.shutter_vars":"Variables of shutter {n} (▲ ▼)…",
+  "ed.position":"Position", "ed.not_placed":"Not placed on the plan.", "ed.place":"Place on the plan",
+  "ed.point":"Point {n}", "ed.move":"Move", "ed.remove_point":"Remove", "ed.add_point":"Add a point", "ed.rotate":"Rotate",
+  "ed.delete":"Delete", "ed.confirm_delete":"Confirm the deletion", "ed.missing_var":"{name} (missing in the program)",
+  "ed.edit_shutter":"Edit the shutter", "ed.cmd_up":"Command ▲ up", "ed.cmd_down":"Command ▼ down",
+  "ed.motor_up":"Motor ▲ (output read)", "ed.motor_down":"Motor ▼ (output read)",
+  "ed.bar":"Edit mode: touch an element to edit it.", "ed.history":"History",
+  "ed.touch_place":"Touch the place of the device (change floor first if needed).", "ed.touch_new":"Touch the new position on the plan.",
+  "ed.other_floor":"This element is on another floor.", "ed.give_name":"Give a name.", "ed.choose_state":"Choose the state read.",
+  "ed.saved":"Change saved", "ed.added":"Added: {what}", "ed.removed":"Removed: {what}", "ed.shutter_saved":"Shutter saved",
+  "ed.no_vars":"List of variables unavailable.",
+  "hist.title":"History", "hist.version":"Plan · version {rev}", "hist.last":"Last change: {s}", "hist.none":"No previous version.",
+  "hist.item":"Version {rev}", "hist.back":"Go back", "hist.restored":"Plan restored to version {rev}",
+  "hist.note":"\"Go back\" puts the plan back as it was in this version. The current version stays in the history.",
+  "hist.start":"starting plan",
+  "logs":"Logs", "logs.refresh":"Refresh", "logs.all":"All", "logs.accounts":"Accounts", "logs.house":"House",
+  "logs.who":"Account or door", "logs.event":"Event", "logs.all_events":"All events", "logs.loading":"Loading…",
+  "logs.none":"No event.", "logs.more":"Load more",
+  "logs.note":"Logins, commands, plan edits, openings and closings of every door and window, alarm siren. Kept 12 months.",
+  "log.login":"Login", "log.command":"Command", "log.edit":"Edit", "log.account":"Account", "log.denied":"Refused", "log.house":"House",
+ },
+ fr: {
+  "app.title":"Maison", "login.note":"Connexion demandée à chaque ouverture.", "login.user":"Identifiant",
+  "login.pass":"Mot de passe", "login.submit":"Se connecter", "login.missing":"Identifiant et mot de passe requis.",
+  "login.again":"Reconnecte-toi.", "login.ended":"Session terminée : reconnecte-toi.",
+  "conn.connecting":"Connexion…", "conn.ok":"Automate connecté · {t}", "conn.old":"Pas de données récentes · {t}",
+  "conn.down":"Automate injoignable", "server.down":"Serveur injoignable", "error":"Erreur {code}",
+  "demo.banner":"Mode démo : données simulées par le serveur, pas l'état réel.",
+  "alert":"Alerte : {list}", "alert.siren":"l'alarme sonne",
+  "tile.openings":"Portes et fenêtres", "tile.open_n":n => `${n} ouverte${n > 1 ? "s" : ""}`, "tile.all_closed":"Toutes fermées",
+  "tile.lights":"Lumières", "tile.on_n":n => `${n} allumée${n > 1 ? "s" : ""}`, "tile.all_off":"Toutes éteintes",
+  "tile.alarm":"Alarme", "tile.ringing":"Elle sonne", "tile.alarm_off":"Désactivée",
+  "tile.detectors":"Fumée et eau", "tile.alert":"ALERTE", "tile.nothing":"Rien à signaler",
+  "floors":"Étages", "plan.zoom":"Agrandir", "plan.unzoom":"Réduire", "plan.edit":"Modifier le plan", "plan.done":"Terminer",
+  "plan.label":"Plan de l'étage",
+  "legend.on":"Allumée", "legend.off":"Éteinte", "legend.closed":"Fermée", "legend.open":"Ouverte", "legend.shutter":"▲▼ Volet",
+  "legend.guess":"Pointillés : à confirmer", "legend.touch":"Touchez un élément pour le détail",
+  "tab.home":"Maison", "tab.lights":"Lumières", "tab.actions":"Actions", "tab.info":"Infos", "tab.logs":"Logs", "tabs":"Sections",
+  "outside":"Extérieur", "no_position":"Sans emplacement sur le plan", "others":"Autres",
+  "lights.all":"Toutes", "lights.on":"Allumées", "lights.readonly":"Lecture seule : {why}",
+  "lights.no_var":"les lampes n'ont pas encore de variable de commande dans l'automate.",
+  "lights.unknown":"État inconnu (automate injoignable).", "lights.none_on":"Aucune lumière allumée.",
+  "st.unknown":"inconnu", "st.light_on":"Allumée", "st.light_off":"Éteinte", "st.dev_on":"En marche", "st.dev_off":"Arrêt",
+  "st.alert":"ALERTE", "st.clear":"Rien à signaler", "st.closed":"Fermée", "st.open":"Ouverte", "st.not_readable":"pas encore lisible",
+  "plan.open_tag":"ouvert",
+  "state":"État", "turn_on":"Activer", "turn_off":"Désactiver", "start":"Mettre en marche", "stop":"Arrêter", "on_off":"Marche / arrêt",
+  "garage":"Porte de garage", "garage.motor":"Moteur ({sig})", "garage.motor_on":"allumé", "garage.motor_off":"éteint",
+  "garage.open":"▲ Ouvrir", "garage.close":"▼ Fermer", "garage.open_l":"Ouvrir", "garage.close_l":"Fermer",
+  "garage.note":"« Ouvrir » ne marche que porte fermée, « Fermer » que porte ouverte (contact {sig}).",
+  "actions":"Actions", "shutters":"Volets", "shutter":"Volet", "shutter.n":"Volet {n}", "shutter.named":"Volet {name}",
+  "shutter.up":"Monter", "shutter.down":"Descendre", "shutter.up_a":"Monter {name}", "shutter.down_a":"Descendre {name}",
+  "shutter.raising":"▲ en montée", "shutter.lowering":"▼ en descente", "shutter.stopped":"à l'arrêt",
+  "shutter.up_btn":"▲ Monter", "shutter.down_btn":"▼ Descendre",
+  "devices":"Appareils", "devices.note":"Une confirmation est demandée avant chaque changement.",
+  "missing":"Pas encore dans le programme de l'automate : {list}.", "missing.address":"{name} (adresse manquante sur {state})",
+  "missing.shutter_groups":"groupes de volets",
+  "actions.logged":"Chaque commande est notée dans le journal du serveur.",
+  "info":"Infos", "openings":"Portes et fenêtres", "detectors":"Détecteurs", "shutters.none":"Aucun volet en mouvement",
+  "shutters.note":"Pas de capteur de position : seul le moteur en marche est visible.",
+  "commands":"Commandes", "link":"Liaison avec l'automate", "link.sim":"Simulée", "link.on":"Active", "link.off":"Inactive",
+  "program":"Programme de l'automate", "program.stopped":"Arrêté", "program.running":"En marche", "program.no_info":"état non fourni",
+  "available":"Commandes disponibles", "blocked":"bloquée", "account":"Compte",
+  "to_check":"Variables à vérifier (visible par les admins) :", "technical":"Technique",
+  "cancel":"Annuler", "confirm":"Confirmer", "close":"Fermer", "edit":"Modifier", "save":"Enregistrer",
+  "points_together":"{n} points lumineux commandés ensemble.", "no_lamp_var":"Pas encore de variable de commande pour cette lampe.",
+  "no_dev_cmd":"Pas de commande web pour cet appareil.", "place_tbc":"Emplacement à confirmer.", "edit_element":"Modifier cet élément",
+  "sent":"{what} : envoyé", "no_visible":" (aucun changement visible)", "light_on_t":"{name} : allumée", "light_off_t":"{name} : éteinte",
+  "type.light":"Lampe", "type.dev":"Appareil", "type.contact":"Porte / fenêtre", "type.garage":"Porte de garage",
+  "type.fire":"Détecteur de fumée", "type.water":"Détecteur d'eau", "type.tech":"Élément sans emplacement",
+  "kind.socket":"Prise", "kind.fan":"Ventilateur", "kind.heater":"Chauffage", "kind.pump":"Pompe", "kind.other":"Appareil",
+  "choice.light":"Lampe", "choice.led":"LED (barre lumineuse)", "choice.socket":"Prise", "choice.fan":"Ventilateur",
+  "choice.heater":"Chauffage, radiateur", "choice.pump":"Pompe, circulateur", "choice.other":"Autre appareil",
+  "icon.socket":"Prise", "icon.fan":"Ventilateur", "icon.radiator":"Radiateur", "icon.flame":"Flamme", "icon.drop":"Goutte d'eau",
+  "icon.pump":"Pompe", "icon.snowflake":"Froid", "icon.bolt":"Électricité", "icon.plant":"Jardin", "icon.screen":"Écran",
+  "icon.washer":"Machine à laver", "icon.sun":"Soleil", "icon.letter":"Lettre",
+  "ed.new_device":"Nouvel appareil", "ed.add_device":"Ajouter un appareil", "ed.edit":"Modifier", "ed.type":"Type",
+  "ed.icon":"Pictogramme sur le plan", "ed.icon_named":"Pictogramme sur le plan · {name}",
+  "ed.icon_led":"Une LED est toujours une barre lumineuse", "ed.icon_lamp":"Une lampe est toujours un rond lumineux",
+  "ed.icon_hint":"{what}. Choisis un autre type (prise, ventilateur…) pour choisir son pictogramme.",
+  "ed.name":"Nom", "ed.state":"État lu ({kind})", "ed.output":"sortie", "ed.input":"entrée", "ed.in_out":"entrée ou sortie",
+  "ed.choose":"— choisir —", "ed.command":"Commande (variable {prefix})", "ed.none_ro":"— aucune (lecture seule) —",
+  "ed.confirm":"Demander une confirmation avant de commander", "ed.confirm_forced":" (toujours demandée pour cette sortie)",
+  "ed.shutter":"Volet de cette fenêtre", "ed.none":"— aucun —", "ed.shutter_vars":"Variables du volet {n} (▲ ▼)…",
+  "ed.position":"Position", "ed.not_placed":"Pas placé sur le plan.", "ed.place":"Placer sur le plan",
+  "ed.point":"Point {n}", "ed.move":"Déplacer", "ed.remove_point":"Retirer", "ed.add_point":"Ajouter un point", "ed.rotate":"Tourner",
+  "ed.delete":"Supprimer", "ed.confirm_delete":"Confirmer la suppression", "ed.missing_var":"{name} (absente du programme)",
+  "ed.edit_shutter":"Modifier le volet", "ed.cmd_up":"Commande ▲ monter", "ed.cmd_down":"Commande ▼ descendre",
+  "ed.motor_up":"Moteur ▲ (sortie lue)", "ed.motor_down":"Moteur ▼ (sortie lue)",
+  "ed.bar":"Mode édition : touchez un élément pour le modifier.", "ed.history":"Historique",
+  "ed.touch_place":"Touchez l'endroit de l'appareil (changez d'étage avant si besoin).", "ed.touch_new":"Touchez la nouvelle position sur le plan.",
+  "ed.other_floor":"Cet élément est sur un autre étage.", "ed.give_name":"Donne un nom.", "ed.choose_state":"Choisis l'état lu.",
+  "ed.saved":"Modification enregistrée", "ed.added":"Ajouté : {what}", "ed.removed":"Supprimé : {what}", "ed.shutter_saved":"Volet enregistré",
+  "ed.no_vars":"Liste des variables indisponible.",
+  "hist.title":"Historique", "hist.version":"Plan · version {rev}", "hist.last":"Dernière modification : {s}", "hist.none":"Aucune version précédente.",
+  "hist.item":"Version {rev}", "hist.back":"Revenir", "hist.restored":"Plan remis à la version {rev}",
+  "hist.note":"« Revenir » remet le plan tel qu'il était à cette version. La version actuelle est gardée dans l'historique.",
+  "hist.start":"plan de départ",
+  "logs":"Logs", "logs.refresh":"Actualiser", "logs.all":"Tous", "logs.accounts":"Comptes", "logs.house":"Maison",
+  "logs.who":"Compte ou porte", "logs.event":"Événement", "logs.all_events":"Tous les événements", "logs.loading":"Chargement…",
+  "logs.none":"Aucun événement.", "logs.more":"Charger plus",
+  "logs.note":"Connexions, commandes, modifications du plan, ouvertures et fermetures de toutes les portes et fenêtres, sirène de l'alarme. Gardé 12 mois.",
+  "log.login":"Connexion", "log.command":"Commande", "log.edit":"Modification", "log.account":"Compte", "log.denied":"Refus", "log.house":"Maison",
+ },
+};
+const LANG = I18N[document.documentElement.lang] ? document.documentElement.lang : "en";
+const TZ = document.documentElement.dataset.tz || undefined;
+const SEP = LANG === "fr" ? " : " : ": ";
+function t(key, vars){
+  const v = I18N[LANG][key] ?? I18N.en[key] ?? key;
+  if (typeof v === "function") return v(vars);
+  return vars ? v.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? "") : v;
+}
+for (const el of document.querySelectorAll("[data-t]")) el.textContent = t(el.dataset.t);
+document.title = t("app.title");
+
+/* ------------------------------------------------------------------
+   Walls and rooms: house.json of the server (example: examples/house.json), sent with the plan
+   (GET api/plan, field "house"). Units: cm, origin = top-left corner of the house. Per floor: id,
+   name, tab (short name), sub, outline, rooms [{name, x, y, w, h} or {name, pts}], doors, stairs,
+   labels, extLabels. Lamps, devices, doors and windows, detectors and shutters are NOT there: they
+   come from the plan (app/plan.py, plan.json) and admins edit them from the page.
+
+   House rules (field "rules", from rules.json): fixed functions of the Actions tab, garage door,
+   siren, alerts, outputs that always ask for a confirmation, prefix of the command variables.
+   ------------------------------------------------------------------ */
+let FLOORS = [];                                 // filled by buildPlan() (field "house")
+let RULES = {prefix:"", functions:[], garage:null, siren:null, alerts:[], confirm_outputs:[]};
+
+/* Elements placed on the plans: filled by buildPlan() from the plan received from the server.
+   ITEMS    placed elements (with their floor and room)       LIGHTS  every lamp
+   DEVICES  controllable devices                               TECH    elements without a position (Info tab)
+   SHUTTERS {n: name of the shutter}                           CMDS    texts of the commands (buttons, confirmations)
+
+   Each command carries the NAME of its PLC variable (the server sends the list of allowed ones):
+     lamp or device   field "cmd" of the plan element    e.g. HMI_DO_Kitchen_Spots
+     shutter          fields "up" / "down" of the shutter e.g. HMI_DO_Shutter3_Up
+     functions        rules file
+   A button stays greyed out while its variable does not exist in the program.
+   Toggle (function with "toggle"): one button, "Turn on" or "Turn off" depending on the state
+   read in `state`. The page sends the wanted state; the server only sends the pulse if the state
+   is not reached already. */
+let PLAN = {rev:0, elements:[], shutters:{}};
+let ITEMS = [], LIGHTS = [], DEVICES = [], TECH = [], BYSIG = {}, BYID = {}, SHUTTERS = {}, CMDS = {};
+const OUTSIDE = "\u0000outside";                // room of the elements placed outside every room
+
+let sirenSeen = 0;                               // last time the siren was at 1
+// The alarm is ringing: siren at 1, or at 0 for less than pause_s (its short pauses do not count)
+function sirenRinging(){
+  const s = RULES.siren;
+  if (!s) return false;
+  if (val(s.output) === true) sirenSeen = Date.now();
+  return !!sirenSeen && Date.now() - sirenSeen < s.pause_s * 1000;
+}
+function fstate(f){ return f.state.find(s => S.signals && S.signals[s] !== undefined) || f.state[0]; }
+const isShutterFn = (f) => f.effect && typeof f.effect === "object" && "shutters" in f.effect;
+
+/* ------------------------------------------------------------------ */
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const DESK = matchMedia("(min-width:1000px)");
+const COARSE = matchMedia("(pointer:coarse)");
+let S = {signals:{}, connected:false, ts:null, error:null};
+let floorId = (location.hash || "").slice(1);   // checked in buildPlan(), once the floors are known
+let view = "home", highlight = null, sheet = null, lightFilter = "all";
+
+function live(){ return S.connected && !!S.ts && (Date.now() - Date.parse(S.ts)) < 15000; }
+function val(sig){ if (!live()) return null; const v = S.signals[sig]; return v === undefined ? null : !!v; }
+function contactOpen(it){ const v = val(it.sig); return v === null ? null : !v; }  // contacts: 1 = closed
+function garageOpen(it){
+  const v = val(it.sig), g = RULES.garage;
+  return v === null ? null : g && it.sig === g.sensor ? v === g.open_value : v;
+}
+function shutterMove(n){
+  const s = PLAN.shutters[n] || {}, up = s.out_up ? val(s.out_up) : null, dn = s.out_down ? val(s.out_down) : null;
+  return up ? "up" : dn ? "down" : null;
+}
+function shutterCmd(n, d){ return (PLAN.shutters[n] || {})[d] || ""; }      // ▲ ("up") or ▼ ("down") variable of shutter n
+let token = null, hiddenAt = null;
+const busy = new Set();
+const LOCK_AFTER_MS = 5 * 60 * 1000;   // coming back to the page after 5 min in the background asks to log in again
+// The server sends {exact variable name: {kind, confirm}}. TwinCAT ignores case, so the exact
+// name is found from a name written in any case.
+let CMDKEY = {};
+function setCommands(c){ S.commands = c || {}; CMDKEY = Object.fromEntries(Object.keys(S.commands).map(k => [k.toLowerCase(), k])); }
+function srv(name){ return name ? CMDKEY[name.toLowerCase()] || null : null; }   // name on the server side, or null
+function ready(){ return live() && !!(S.iface && S.iface.ok); }
+function canControl(name){ const k = srv(name); return !!k && !busy.has(name) && ready() && !(S.blocked || []).includes(k); }
+function needsConfirm(name){ const k = srv(name); return !!(k && S.commands[k].confirm); }
+function anyControl(){ return Object.keys(CMDKEY).length > 0 && ready(); }
+function ifaceMsg(){ return !live() ? t("conn.down") + "." : (S.iface && S.iface.msg) || ""; }
+const cmdOf = (it) => (it && it.cmd) || "";                                 // variable that commands the element
+let ME = {user:"", group:"user"};                                           // logged-in account
+function isAdmin(){ return ME.group === "admin"; }
+
+/* ---------- rooms: which room an element belongs to ---------- */
+function pip(pts, x, y){
+  let c = false;
+  for (let i = 0, j = pts.length - 1; i < pts.length; j = i++){
+    const [xi, yi] = pts[i], [xj, yj] = pts[j];
+    if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c;
+  }
+  return c;
+}
+function inRoom(r, x, y){ return r.pts ? pip(r.pts, x, y) : x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h; }
+function anchor(it){
+  if (it.at) return it.at[0];
+  if (it.segs){ const s = it.segs[0]; return [(s[0] + s[2]) / 2, (s[1] + s[3]) / 2]; }
+  if (it.x1 !== undefined) return [(it.x1 + it.x2) / 2, (it.y1 + it.y2) / 2];
+  return [it.x, it.y];
+}
+function roomOf(f, it){
+  if (it.t === "contact" || it.t === "garage") return null;
+  const [x, y] = anchor(it);
+  for (let i = f.rooms.length - 1; i >= 0; i--){
+    const r = f.rooms[i];
+    if (!r.sub && r.name && inRoom(r, x, y)) return r.name;
+  }
+  return OUTSIDE;
+}
+const roomName = (r) => r === OUTSIDE ? t("outside") : r;
+function noPos(e){ return e.x === undefined && !e.at && !e.segs && e.x1 === undefined; }
+function buildPlan(p){
+  PLAN = p;
+  if (p.house){                                  // walls and rooms: only when the full plan is loaded
+    FLOORS = p.house.floors.map(f => ({...f, items:[]}));
+    if (!FLOORS.some(f => f.id === floorId) && FLOORS.length) floorId = FLOORS[0].id;
+  }
+  if (p.rules) RULES = p.rules;
+  for (const f of FLOORS) f.items = p.elements.filter(e => e.floor === f.id && e.t !== "tech" && !noPos(e));
+  ITEMS = FLOORS.flatMap(f => f.items.map(it => ({...it, floor:f, room:roomOf(f, it)})));
+  const floating = p.elements.filter(e => e.t === "light" && noPos(e))
+    .map(e => ({...e, floor:FLOORS.find(f => f.id === e.floor) || null, nopos:true}));
+  LIGHTS = ITEMS.filter(i => i.t === "light").concat(floating);
+  TECH = p.elements.filter(e => e.t === "tech");
+  DEVICES = ITEMS.filter(i => i.t === "dev").concat(TECH.filter(x => x.cmd).map(x => ({...x, floor:null})));
+  BYSIG = Object.fromEntries(ITEMS.concat(LIGHTS, TECH).map(i => [i.sig, i]));
+  BYID = Object.fromEntries(p.elements.map(e => [e.id, e]));
+  SHUTTERS = Object.fromEntries(Object.entries(p.shutters).map(([n, s]) => [n, s.name]));
+  // Texts of the commands (buttons and confirmation)
+  // tog = signal inverted by the pulse; lon / loff = text to switch on / off
+  CMDS = {};
+  for (const f of RULES.functions){
+    CMDS[f.var] = f.toggle
+      ? {id:f.var, label:f.group, group:f.group, get tog(){ return fstate(f); }, lon:t("turn_on"), loff:t("turn_off")}
+      : {id:f.var, label:f.label, group:f.group, keep:f.admin};
+  }
+  for (const s of Object.values(p.shutters)){                       // shutters one by one
+    if (s.up) CMDS[s.up] = {id:s.up, label:t("shutter.up"), group:t("shutter.named", {name:s.name}), keep:true};
+    if (s.down) CMDS[s.down] = {id:s.down, label:t("shutter.down"), group:t("shutter.named", {name:s.name}), keep:true};
+  }
+  const g = RULES.garage;
+  if (g){
+    CMDS[g.open] = {id:g.open, label:t("garage.open_l"), group:t("garage"), keep:true};
+    CMDS[g.close] = {id:g.close, label:t("garage.close_l"), group:t("garage"), keep:true};
+  }
+  for (const d of DEVICES) CMDS[d.cmd] = {id:d.cmd, label:t("on_off"), group:d.name, tog:d.sig,
+    lon:t("start"), loff:t("stop"), keep:true};
+}
+function where(it){ return it.floor ? (it.room ? `${it.floor.name} · ${roomName(it.room)}` : it.floor.name) : (it.room || ""); }
+
+function stateOf(it){
+  if (!it) return [t("st.unknown"), "muted"];
+  const v = val(it.sig);
+  if (v === null) return [t("st.unknown"), "muted"];
+  switch (it.t){
+    case "light":   return v ? [t("st.light_on"), "on"] : [t("st.light_off"), "muted"];
+    case "dev":     return v ? [t("st.dev_on"), "on"] : [t("st.dev_off"), "muted"];
+    case "fire":
+    case "water":   return v ? [t("st.alert"), "alert"] : [t("st.clear"), "ok"];
+    case "contact": return v ? [t("st.closed"), "ok"] : [t("st.open"), "alert"];
+    case "garage":  return garageOpen(it) ? [t("st.open"), "alert"] : [t("st.closed"), "ok"];
+  }
+  return [v ? "1" : "0", ""];
+}
+
+/* ---------- SVG ---------- */
+let HITS = [];
+function floorVB(f){
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  const add = (x, y) => { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); };
+  f.outline.forEach(p => add(...p));
+  f.rooms.forEach(r => r.pts ? r.pts.forEach(p => add(...p)) : (add(r.x, r.y), add(r.x + r.w, r.y + r.h)));
+  f.items.forEach(it => {
+    if (it.x1 !== undefined){
+      const [ox, oy] = it.out, mx = (it.x1 + it.x2) / 2, my = (it.y1 + it.y2) / 2;
+      add(it.x1, it.y1); add(it.x2, it.y2); add(mx + ox * 150, my + oy * 110);
+    }
+    (it.at || []).forEach(p => add(...p));
+    (it.segs || []).forEach(s => { add(s[0], s[1]); add(s[2], s[3]); });
+    if (it.x !== undefined) add(it.x, it.y);
+  });
+  (f.extLabels || []).forEach(e => { add(e.x - 60, e.y - 25); add(e.x + 60, e.y + 15); });
+  const m = 55;
+  return [x0 - m, y0 - m, x1 - x0 + 2 * m, y1 - y0 + 2 * m];
+}
+
+function svgFloor(f, K){
+  HITS = [];
+  let s = `<defs><pattern id="hatch" width="22" height="22" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+    <rect width="22" height="22" fill="var(--room)"/><line x1="0" y1="0" x2="0" y2="22" stroke="var(--hatch)" stroke-width="3"/></pattern></defs>`;
+  for (const r of f.rooms){
+    const c = `${r.sub ? "room sub" : r.hatch ? "room hatch" : "room"}${r.guess ? " guess" : ""}`;
+    s += r.pts ? `<polygon class="${c}" points="${r.pts.map(p => p.join(",")).join(" ")}"/>`
+               : `<rect class="${c}" x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}"/>`;
+  }
+  for (const st of (f.stairs || [])){
+    s += `<g class="stairs">`;
+    if (st.pivot) for (const p of st.to) s += `<line x1="${st.pivot[0]}" y1="${st.pivot[1]}" x2="${p[0]}" y2="${p[1]}"/>`;
+    else if (st.dir === "h") for (let x = st.x + 22; x < st.x + st.w; x += 22) s += `<line x1="${x}" y1="${st.y}" x2="${x}" y2="${st.y + st.h}"/>`;
+    else for (let y = st.y + 22; y < st.y + st.h; y += 22) s += `<line x1="${st.x}" y1="${y}" x2="${st.x + st.w}" y2="${y}"/>`;
+    s += `</g>`;
+  }
+  s += `<polygon class="outline" points="${f.outline.map(p => p.join(",")).join(" ")}"/>`;
+  for (const d of (f.doors || [])) s += svgDoor(d);
+  for (const d of (f.dividers || [])) s += `<line class="divider" x1="${d[0]}" y1="${d[1]}" x2="${d[2]}" y2="${d[3]}"/>`;
+  for (const r of f.rooms){
+    if (!r.name) continue;
+    const lx = r.lx ?? (r.center ? r.x + r.w / 2 : r.x + 22);
+    const ly = r.ly ?? (r.center ? r.y + r.h / 2 : r.y + 40);
+    const rot = r.vertical ? ` transform="rotate(-90 ${lx} ${ly})"` : "";
+    let fs = (r.small ? 19 : 25) * (K > 1 ? 1.8 : 1);
+    if (!r.vertical){
+      const [bx, , bw, bh] = r.pts ? bbox(r.pts) : [r.x, r.y, r.w, r.h];
+      const avail = r.center ? bw - 16 : bx + bw - lx - 12;
+      fs = Math.min(fs, avail / (r.name.length * 0.6), r.center ? bh * 0.7 : fs);
+    }
+    s += `<text class="room-label${r.center ? " c" : ""}" style="font-size:${fs.toFixed(1)}px" x="${lx}" y="${ly}"${rot}>${esc(r.name)}</text>`;
+  }
+  for (const l of (f.labels || [])) s += `<text class="room-label${l.center ? " c" : ""}" style="font-size:${((l.small ? 19 : 25) * (K > 1 ? 1.6 : 1)).toFixed(1)}px" x="${l.x}" y="${l.y}">${esc(l.t)}</text>`;
+  for (const e of (f.extLabels || [])) s += `<text class="ext-label" x="${e.x}" y="${e.y}">${esc(e.t)}</text>`;
+  for (const it of f.items.filter(i => i.t === "contact" || i.t === "garage")) s += svgOpening(it, K);
+  for (const it of f.items.filter(i => !(i.t === "contact" || i.t === "garage"))) s += svgPoint(it, K, f);
+  return s;
+}
+
+function bbox(pts){
+  const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
+  return [Math.min(...xs), Math.min(...ys), Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)];
+}
+
+function svgDoor(d){
+  const w = Math.hypot(d.x2 - d.x1, d.y2 - d.y1), [nx, ny] = d.into;
+  const ux = (d.x2 - d.x1) / w, uy = (d.y2 - d.y1) / w;
+  const lx = d.x1 + nx * w, ly = d.y1 + ny * w, sweep = (ux * ny - uy * nx) > 0 ? 1 : 0;
+  return `<g><line class="door-gap${d.ext ? " ext" : ""}" x1="${d.x1}" y1="${d.y1}" x2="${d.x2}" y2="${d.y2}"/>`
+       + `<line class="door-leaf" x1="${d.x1}" y1="${d.y1}" x2="${lx}" y2="${ly}"/>`
+       + `<path class="door-arc" d="M ${d.x2} ${d.y2} A ${w} ${w} 0 0 ${sweep} ${lx} ${ly}"/></g>`;
+}
+
+function svgOpening(it, K){
+  const open = it.t === "garage" ? garageOpen(it) : contactOpen(it);
+  const cls = open === null ? "win-unk" : open ? "win-open" : "win-closed";
+  const mx = (it.x1 + it.x2) / 2, my = (it.y1 + it.y2) / 2, [ox, oy] = it.out;
+  let extra = "";
+  if (it.shutter){
+    const mv = shutterMove(it.shutter);
+    if (mv){
+      const ax = mx + ox * 48 * K, ay = my + oy * 48 * K, d = mv === "up" ? 1 : -1, a = 14 * K;
+      extra += `<path class="shutter pulse" d="M ${ax - a} ${ay + d * 8 * K} L ${ax + a} ${ay + d * 8 * K} L ${ax} ${ay - d * 12 * K} Z"/>`;
+    }
+  }
+  const tg = (it.shutter ? (oy ? 92 : 112) : (oy ? 40 : 62)) * K;
+  if (open){
+    // garage door: label next to the door, so it does not hide the outside light
+    const [tx, ty] = it.t === "garage" ? [it.x1 - 75 * K, my + 35 * K] : [mx + ox * tg, my + oy * tg];
+    extra += `<text class="open-tag" x="${tx}" y="${ty}">${esc(t("plan.open_tag"))}</text>`;
+  }
+  const hl = highlight === it.sig ? `<circle class="hl" cx="${mx}" cy="${my}" r="${Math.hypot(it.x2 - it.x1, it.y2 - it.y1) / 2 + 26 * K}"/>` : "";
+  HITS.push({sig:it.sig, seg:[it.x1, it.y1, it.x2, it.y2]});
+  return `<g>${hl}<line class="gap" x1="${it.x1}" y1="${it.y1}" x2="${it.x2}" y2="${it.y2}"/>
+    <line class="${cls}${it.guess && open === false ? " guess" : ""}" x1="${it.x1}" y1="${it.y1}" x2="${it.x2}" y2="${it.y2}"/>${extra}</g>`;
+}
+
+function onStairs(f, x, y){
+  return (f.stairs || []).some(st => {
+    const [bx, by, bw, bh] = st.pivot ? bbox([st.pivot, ...st.to]) : [st.x, st.y, st.w, st.h];
+    return x > bx - 30 && x < bx + bw + 30 && y > by - 30 && y < by + bh + 30;
+  });
+}
+
+function svgPoint(it, K, f){
+  const v = val(it.sig), g = it.guess ? " guess" : "";
+  const pts = it.at || (it.x !== undefined ? [[it.x, it.y]] : []);
+  const r = 16 * K;
+  let body = "", hl = "";
+  for (const [x, y] of pts) if (onStairs(f, x, y)) body += `<circle cx="${x}" cy="${y}" r="${r + 12 * K}" fill="var(--room)"/>`;
+  if (it.t === "light"){
+    for (const [x, y] of pts){
+      body += v === null ? `<circle class="unk" cx="${x}" cy="${y}" r="${r}"/>`
+        : v ? `<circle class="glow" cx="${x}" cy="${y}" r="${40 * K}"/><circle class="light-on" cx="${x}" cy="${y}" r="${r}"/>`
+            : `<circle class="light-off${g}" cx="${x}" cy="${y}" r="${r}"/>`;
+    }
+    for (const sg of (it.segs || [])){
+      const l = (c) => `<line class="${c}" x1="${sg[0]}" y1="${sg[1]}" x2="${sg[2]}" y2="${sg[3]}"/>`;
+      body += v === null ? l("led-unk") : v ? l("led-glow") + l("led-on") : l("led-off" + g) + l("led-core");
+      HITS.push({sig:it.sig, seg:sg});
+      if (highlight === it.sig) hl += `<circle class="hl" cx="${(sg[0] + sg[2]) / 2}" cy="${(sg[1] + sg[3]) / 2}" r="${Math.hypot(sg[2] - sg[0], sg[3] - sg[1]) / 2 + 28 * K}"/>`;
+    }
+  } else if (it.t === "dev"){
+    const a = 17 * K;
+    const sc = 26 * K / 24, ic = iconSVG(iconOf(it), it);              // 24 × 24 icon scaled to 26 cm
+    for (const [x, y] of pts) body += `<rect class="${v === null ? "unk" : v ? "dev-on" : "dev-off" + g}" x="${x - a}" y="${y - a}" width="${2 * a}" height="${2 * a}" rx="${8 * K}"/>`
+      + `<g class="dev-ico" transform="translate(${x - 12 * sc} ${y - 12 * sc}) scale(${sc})">${ic}</g>`;
+  } else if (it.t === "fire" || it.t === "water"){
+    const c = v === null ? "unk" : v ? "fire-alert" : "fire-ok" + g, q = K;
+    for (const [x, y] of pts){
+      body += it.t === "fire"
+        ? `<circle class="${c}" cx="${x}" cy="${y}" r="${15 * q}"/><circle cx="${x}" cy="${y}" r="${5 * q}" fill="var(--muted)"/>`
+        : `<path class="${c}" d="M ${x} ${y - 20 * q} C ${x + 14 * q} ${y - 2 * q}, ${x + 14 * q} ${y + 16 * q}, ${x} ${y + 16 * q} C ${x - 14 * q} ${y + 16 * q}, ${x - 14 * q} ${y - 2 * q}, ${x} ${y - 20 * q} Z"/>`;
+      if (v) body += `<circle class="ring pulse" cx="${x}" cy="${y}" r="${30 * q}"/>`;
+    }
+  }
+  for (const [x, y] of pts){
+    HITS.push({sig:it.sig, x, y});
+    if (highlight === it.sig) hl += `<circle class="hl" cx="${x}" cy="${y}" r="${34 * K}"/>`;
+  }
+  return `<g>${hl}${body}</g>`;
+}
+
+/* ---------- rendering ---------- */
+const cache = new Map();
+function setHTML(el, html){ if (cache.get(el) !== html){ cache.set(el, html); el.innerHTML = html; } }
+function sw(it){
+  const v = val(it.sig);
+  const b = busy.has(cmdOf(it));
+  return `<button class="switch${v === null ? " unk" : ""}${b ? " busy" : ""}" role="switch" aria-checked="${v === true}" aria-label="${esc(it.name)}" data-light="${it.sig}"${canControl(cmdOf(it)) && v !== null ? "" : " disabled"}${b ? ' aria-busy="true"' : ""}><span></span></button>`;
+}
+function fmtTime(ts){ return new Date(ts).toLocaleTimeString(LANG, {timeZone:TZ}); }
+
+function renderConn(){
+  const ok = live();
+  $("#dot").className = "dot " + (ok ? "ok" : "bad");
+  const tm = S.ts ? fmtTime(S.ts) : "—";
+  $("#conn").textContent = ok ? t("conn.ok", {t:tm}) : S.ts ? t("conn.old", {t:tm}) : (S.error || t("conn.down"));
+}
+
+function renderAlert(){
+  const al = ITEMS.filter(i => (i.t === "fire" || i.t === "water") && val(i.sig) === true).map(i => i.name);
+  for (const [sig, label] of RULES.alerts) if (val(sig) === true) al.unshift(label);
+  // Siren: on, or off for less than pause_s (short pauses of the siren do not make the banner blink)
+  if (sirenRinging()) al.unshift(t("alert.siren"));
+  const el = $("#alert");
+  el.hidden = !al.length;
+  if (al.length) setHTML(el, esc(t("alert", {list:al.join(", ")})));
+}
+
+function renderTiles(){
+  const u = !live();
+  const open = ITEMS.filter(i => i.t === "contact" && contactOpen(i) === true);
+  const on = LIGHTS.filter(i => val(i.sig) === true);
+  // Alarm: ringing > active toggles marked "tile" in the rules > off
+  const tiled = RULES.functions.filter(f => f.toggle && f.tile);
+  const states = tiled.map(f => [f, val(fstate(f))]);
+  const active = states.filter(([, v]) => v === true).map(([f]) => f.tile);
+  const [alV, alC] = u || !tiled.length ? ["—", "muted"] : sirenRinging() ? [t("tile.ringing"), "alert"]
+    : active.length ? [active.join(" + "), "ok"] : states.every(([, v]) => v === false) ? [t("tile.alarm_off"), ""] : ["—", "muted"];
+  const alarms = ITEMS.filter(i => (i.t === "fire" || i.t === "water") && val(i.sig) === true);
+  const tile = (k, v, c, attrs) => `<button class="tile" ${attrs}><span class="k">${esc(k)}</span><span class="v ${c}">${esc(v)}</span></button>`;
+  setHTML($("#tiles"),
+    tile(t("tile.openings"), u ? "—" : open.length ? t("tile.open_n", open.length) : t("tile.all_closed"), u ? "muted" : open.length ? "alert" : "ok", `data-view="info"`) +
+    tile(t("tile.lights"), u ? "—" : on.length ? t("tile.on_n", on.length) : t("tile.all_off"), u ? "muted" : on.length ? "on" : "", `data-view="lights"`) +
+    tile(t("tile.alarm"), alV, alC, `data-view="actions"`) +
+    tile(t("tile.detectors"), u ? "—" : alarms.length ? t("tile.alert") : t("tile.nothing"), u ? "muted" : alarms.length ? "alert" : "ok", `data-view="info"`));
+}
+
+function renderPlan(){
+  const f = FLOORS.find(x => x.id === floorId) || FLOORS[0];
+  if (!f){ setHTML($("#floors"), ""); return; }    // plan not received yet
+  setHTML($("#floors"), FLOORS.map(x => {
+    const n = LIGHTS.filter(i => i.floor === x && val(i.sig) === true).length;
+    return `<button role="tab" aria-selected="${x.id === f.id}" data-floor="${x.id}">${esc((!DESK.matches && x.tab) || x.name)}${n ? `<span class="n">${n}</span>` : ""}</button>`;
+  }).join(""));
+  setHTML($("#cap"), DESK.matches ? esc(f.sub || "") : `${esc(f.name)}${f.sub ? " · " + esc(f.sub) : ""}`);
+  const svg = $("#svg"), w = svg.clientWidth;
+  if (!w) return;                                 // view hidden
+  const compact = w < 700, K = compact ? 1.8 : 1;
+  svg.classList.toggle("compact", compact);
+  svg.setAttribute("viewBox", floorVB(f).join(" "));
+  setHTML(svg, svgFloor(f, K) + svgDraft(f, K));
+  document.body.classList.toggle("editing", editing);
+  const guess = f.rooms.some(r => r.guess) || f.items.some(i => i.guess);
+  setHTML($("#legend"), `<span><i class="lg-light"></i>${t("legend.on")}</span><span><i class="lg-off"></i>${t("legend.off")}</span>
+    <span><i class="lg-win"></i>${t("legend.closed")}</span><span><i class="lg-open"></i>${t("legend.open")}</span><span>${t("legend.shutter")}</span>
+    ${guess ? `<span>${t("legend.guess")}</span>` : ""}<span>${t("legend.touch")}</span>`);
+}
+
+function lightGroups(){
+  const groups = [];
+  for (const f of FLOORS){
+    const rooms = [];
+    for (const r of f.rooms){
+      if (!r.name || rooms.some(x => x.name === r.name)) continue;
+      const ls = LIGHTS.filter(i => i.floor === f && i.room === r.name);
+      if (ls.length) rooms.push({name:r.name, items:ls});
+    }
+    const np = LIGHTS.filter(i => i.floor === f && i.nopos);
+    if (np.length) rooms.push({name:t("no_position"), items:np});
+    if (rooms.length) groups.push({name:f.name, rooms});
+  }
+  const ext = LIGHTS.filter(i => i.room === OUTSIDE && !i.nopos);
+  if (ext.length) groups.push({name:t("outside"), rooms:[{name:"", items:ext}]});
+  const other = LIGHTS.filter(i => !i.floor);
+  if (other.length) groups.push({name:t("others"), rooms:[{name:"", items:other}]});
+  return groups;
+}
+
+function renderLights(){
+  const u = !live(), on = LIGHTS.filter(i => val(i.sig) === true);
+  const off = RULES.functions.find(f => f.effect === "lights_off");
+  let h = `<div class="head"><h2>${t("tab.lights")}</h2>${off && srv(off.var) ? cbtn(off.var, off.label) : ""}</div>
+    <div class="seg" role="tablist"><button role="tab" data-filter="all" aria-selected="${lightFilter === "all"}">${t("lights.all")}</button>
+    <button role="tab" data-filter="on" aria-selected="${lightFilter === "on"}">${t("lights.on")}${on.length ? `<span class="n">${on.length}</span>` : ""}</button></div>`;
+  if (!LIGHTS.some(l => canControl(cmdOf(l))) && !busy.size) h += `<p class="note">${esc(t("lights.readonly", {why:ifaceMsg() || t("lights.no_var")}))}</p>`;
+  if (lightFilter === "on" && !on.length) h += `<p class="note">${u ? t("lights.unknown") : t("lights.none_on")}</p>`;
+  for (const g of lightGroups()){
+    const rooms = g.rooms.map(r => ({...r, items: lightFilter === "on" ? r.items.filter(i => val(i.sig) === true) : r.items})).filter(r => r.items.length);
+    if (!rooms.length) continue;
+    h += `<h3 class="group">${esc(g.name)}</h3><div class="list">`;
+    for (const r of rooms){
+      if (r.name) h += `<div class="sub-h">${esc(r.name)}</div>`;
+      for (const it of r.items)
+        h += `<div class="li">${it.floor && !it.nopos ? `<button class="li-name" data-goto="${it.floor.id}" data-sig="${it.sig}">${esc(it.name)}</button>` : `<span class="li-name">${esc(it.name)}</span>`}${edBtn(it.id)}${sw(it)}</div>`;
+    }
+    h += `</div>`;
+  }
+  setHTML($("#v-lights"), h);
+}
+
+// Command button: greyed out if the variable is missing in the program or the controller is not ready
+function cbtn(name, label, cls, extra){
+  return `<button class="btn${cls || ""}" data-cmd="${esc(name)}"${extra || ""}${canControl(name) ? "" : " disabled"}>${esc(label)}</button>`;
+}
+function stateRow(label, sig, on, off){
+  let v;
+  if (S.signals[sig] === undefined) v = `<span class="val muted">${t("st.not_readable")}</span>`;
+  else { const x = val(sig); v = x === null ? `<span class="val muted">${t("st.unknown")}</span>` : `<span class="val ${x ? "on" : ""}">${esc(x ? on : off)}</span>`; }
+  return `<div class="li"><span>${esc(label)}</span>${v}</div>`;
+}
+// Garage door: the contact of the rules only. The motor output (optional) is shown as is: it does
+// not necessarily say whether the door is moving.
+function garageHTML(){
+  const g = RULES.garage, item = ITEMS.find(i => i.sig === g.sensor) || {sig:g.sensor, t:"garage"};
+  const isOpen = garageOpen(item);
+  const [st, c] = isOpen === null ? [t("st.unknown"), "muted"] : isOpen ? [t("st.open"), "alert"] : [t("st.closed"), "ok"];
+  // "Open" only when closed, "Close" only when open (the server checks again)
+  const b = (n, l, ok) => srv(n) ? `<button class="btn" data-cmd="${esc(n)}"${canControl(n) && ok ? "" : " disabled"}>${l}</button>` : "";
+  let h = `<div class="li"><span>${t("state")}</span><span class="val ${c}">${st}</span></div>`;
+  if (g.motor){
+    const m = val(g.motor);
+    h += `<div class="li"><span>${esc(t("garage.motor", {sig:g.motor}))}</span><span class="val ${m === null ? "muted" : ""}">${m === null ? t("st.unknown") : m ? t("garage.motor_on") : t("garage.motor_off")}</span></div>`;
+  }
+  return h + `<div class="row-btns">${b(g.open, t("garage.open"), isOpen === false)}${b(g.close, t("garage.close"), isOpen === true)}</div>`
+    + `<p class="note">${esc(t("garage.note", {sig:g.sensor}))}</p>`;
+}
+// Button of a toggle (device, alarm...): its text depends on the state read; greyed out if unknown
+function togBtn(name){
+  const c = CMDS[name], v = val(c.tog);
+  if (!srv(name)) return "";
+  return cbtn(name, v ? c.loff : c.lon, v ? " danger" : "", v === null ? " disabled" : "");
+}
+function deviceBtn(d){ return d.cmd ? togBtn(d.cmd) : ""; }
+
+function renderActions(){
+  let h = `<div class="head"><h2>${t("actions")}</h2></div>`;
+  const missing = [];
+  const groups = [];                                    // other functions, by group, in the order of the rules file
+  for (const f of RULES.functions){
+    if (isShutterFn(f) || (f.admin && !isAdmin())) continue;
+    if (f.toggle){                                      // toggle: state + one button
+      if (!srv(f.var) && S.signals[fstate(f)] === undefined){
+        // the toggle variable may exist already, but without a readable state the server refuses it
+        const noState = (S.to_check || []).some(([n]) => n.toLowerCase() === f.var.toLowerCase());
+        missing.push(noState ? t("missing.address", {name:f.group, state:fstate(f)}) : f.group); continue;
+      }
+      h += `<h3 class="group">${esc(f.group)}</h3><div class="list">${stateRow(t("state"), fstate(f), f.on, f.off)}`;
+      if (srv(f.var)) h += `<div class="row-btns">${togBtn(f.var)}</div>`;
+      h += `</div>`;
+      continue;
+    }
+    let g = groups.find(x => x.name === f.group);
+    if (!g) groups.push(g = {name:f.group, items:[]});
+    g.items.push(f);
+  }
+  for (const g of groups){
+    if (!g.items.some(f => srv(f.var))){ missing.push(g.name); continue; }
+    h += `<h3 class="group">${esc(g.name)}</h3><div class="list"><div class="cmds">${g.items.map(f => cbtn(f.var, f.label)).join("")}</div></div>`;
+  }
+  // Garage door
+  if (RULES.garage){
+    if (srv(RULES.garage.open) || srv(RULES.garage.close)) h += `<h3 class="group">${t("garage")}</h3><div class="list">${garageHTML()}</div>`;
+    else missing.push(t("garage"));
+  }
+  // Shutters: groups (functions of the rules) then one by one
+  const sgroups = RULES.functions.filter(isShutterFn);
+  if (Object.keys(SHUTTERS).length || sgroups.length){
+    h += `<h3 class="group">${t("shutters")}</h3><div class="list">`;
+    if (sgroups.some(f => srv(f.var))) h += `<div class="cmds">${sgroups.map(f => cbtn(f.var, f.label)).join("")}</div>`;
+    else if (sgroups.length) missing.push(t("missing.shutter_groups"));
+    for (const [n, name] of Object.entries(SHUTTERS)){
+      const mv = shutterMove(n), up = shutterCmd(n, "up"), dn = shutterCmd(n, "down");
+      h += `<div class="li"><span>${esc(name)}${mv ? ` <span class="muted">${mv === "up" ? "▲" : "▼"}</span>` : ""}</span><span class="mini">
+        ${editing ? `<button class="btn ed-mini" data-ed="shutter" data-n="${n}">${t("edit")}</button>` : ""}${cbtn(up, "▲", "", ` aria-label="${esc(t("shutter.up_a", {name}))}"`)}${cbtn(dn, "▼", "", ` aria-label="${esc(t("shutter.down_a", {name}))}"`)}</span></div>`;
+    }
+    h += `</div>`;
+  }
+  // Devices
+  const devs = DEVICES.filter(d => srv(d.cmd) || editing);
+  if (devs.length){
+    h += `<h3 class="group">${t("devices")}</h3><div class="list">`;
+    for (const d of devs){ const [st, c] = stateOf(d);
+      h += `<div class="li"><span>${esc(d.name)} <span class="val ${c}">· ${st}</span></span><span class="mini">${edBtn(d.id)}${deviceBtn(d)}</span></div>`; }
+    h += `</div><p class="note">${t("devices.note")}</p>`;
+  }
+  if (missing.length) h += `<p class="note">${esc(t("missing", {list:missing.join(", ")}))}</p>`;
+  h += `<p class="note">${anyControl() ? t("actions.logged") : esc(ifaceMsg())}</p>`;
+  setHTML($("#v-actions"), h);
+}
+
+function renderInfo(){
+  const row = (it) => { const [st, c] = stateOf(it);
+    return `<div class="li"><button class="li-name" data-goto="${it.floor.id}" data-sig="${it.sig}">${esc(it.name)}</button><span class="val ${c}">${st}</span></div>`; };
+  let h = `<div class="head"><h2>${t("info")}</h2></div>`;
+  // Doors and windows: open ones first
+  h += `<h3 class="group">${t("openings")}</h3><div class="list">`;
+  for (const f of FLOORS){
+    const cs = ITEMS.filter(i => i.floor === f && (i.t === "contact" || i.t === "garage"))
+      .sort((a, b) => (stateOf(b)[1] === "alert") - (stateOf(a)[1] === "alert"));
+    if (!cs.length) continue;
+    h += `<div class="sub-h">${esc(f.name)}</div>` + cs.map(i => row(i)).join("");
+  }
+  h += `</div>`;
+  h += `<h3 class="group">${t("detectors")}</h3><div class="list">${ITEMS.filter(i => i.t === "fire" || i.t === "water").map(i => row(i)).join("")}</div>`;
+  const moving = Object.entries(SHUTTERS).map(([n, name]) => ({n, name, mv:shutterMove(n)})).filter(s => s.mv);
+  h += `<h3 class="group">${t("shutters")}</h3><div class="list">${moving.length
+    ? moving.map(s => `<div class="li"><span>${esc(s.name)}</span><span class="val">${s.mv === "up" ? t("shutter.raising") : t("shutter.lowering")}</span></div>`).join("")
+    : `<div class="li"><span class="muted">${live() ? t("shutters.none") : t("st.unknown")}</span></div>`}</div>
+    <p class="note">${t("shutters.note")}</p>`;
+  const run = S.plc_run;
+  h += `<h3 class="group">${t("commands")}</h3><div class="list"><div class="li"><span>${t("link")}</span>
+    <span class="val ${anyControl() ? "ok" : "muted"}">${S.demo ? t("link.sim") : anyControl() ? t("link.on") : t("link.off")}</span></div>
+    <div class="li"><span>${t("program")}</span><span class="val ${run === false ? "alert" : run ? "ok" : "muted"}">${!live() ? t("st.unknown") : run === false ? t("program.stopped") : run ? t("program.running") : t("program.no_info")}</span></div>
+    <div class="li"><span>${t("available")}</span><span class="val">${Object.keys(CMDKEY).length}</span></div>
+    ${(S.blocked || []).map(n => `<div class="li"><span><code>${esc(n)}</code></span><span class="val alert">${t("blocked")}</span></div>`).join("")}
+    </div>
+    ${!anyControl() && ifaceMsg() ? `<p class="note">${esc(ifaceMsg())}</p>` : ""}
+    <div class="li"><span>${t("account")}</span><span class="val">${esc(ME.user)} · ${isAdmin() ? "admin" : "user"}</span></div>
+    ${(S.to_check || []).length ? `<p class="note">${t("to_check")}</p>${Object.entries((S.to_check).reduce((g, [n, r]) => ((g[r] = g[r] || []).push(n), g), {}))
+      .map(([r, ns]) => `<p class="note"><b>${esc(r[0].toUpperCase() + r.slice(1))}</b>${SEP}${ns.map(n => `<code>${esc(n)}</code>`).join(", ")}.</p>`).join("")}` : ""}`;
+  if (TECH.length) h += `<h3 class="group">${t("technical")}</h3><div class="list">${TECH.map(x => { const v = val(x.sig);
+    return `<div class="li"><span>${esc(x.name)}</span><span class="mini">${edBtn(x.id)}<span class="val ${v === null ? "muted" : ""}">${v === null ? t("st.unknown") : v ? esc(x.on) : esc(x.off)}</span></span></div>`; }).join("")}</div>`;
+  setHTML($("#v-info"), h);
+}
+
+function renderTabs(){
+  const on = LIGHTS.filter(i => val(i.sig) === true).length;
+  const warn = ITEMS.filter(i => (i.t === "contact" && contactOpen(i) === true) || ((i.t === "fire" || i.t === "water") && val(i.sig) === true)).length;
+  const sel = DESK.matches && view === "home" ? "lights" : view;
+  const b = (id, badge) => `<button role="tab" data-view="${id}" aria-selected="${sel === id}">${t("tab." + id)}${badge || ""}</button>`;
+  setHTML($("#tabs"), b("home") + b("lights", on ? `<span class="badge">${on}</span>` : "")
+    + b("actions") + b("info", warn ? `<span class="badge red">${warn}</span>` : "") + (isAdmin() ? b("logs") : ""));
+  $("#tabs").style.gridTemplateColumns = `repeat(${(isAdmin() ? 5 : 4) - (DESK.matches ? 1 : 0)},1fr)`;
+}
+
+function renderSheet(){
+  const el = $("#sheet");
+  el.hidden = !sheet;
+  if (!sheet) return;
+  let h = "";
+  if (sheet.edit) h = editHTML(sheet.draft, sheet);
+  else if (sheet.shutter) h = shutterHTML(sheet.shutter, sheet.draft);
+  else if (sheet.history) h = historyHTML(sheet.history, sheet);
+  else if (sheet.cmd){
+    const c = CMDS[sheet.cmd] || {group:"", label:sheet.cmd};
+    const label = sheet.on === undefined ? c.label : sheet.on ? c.lon : c.loff;
+    h = `<p class="eyebrow">${esc(c.group)}</p><h3>${esc(label)} ?</h3>
+      <div class="row-btns"><button class="btn" data-close>${t("cancel")}</button><button class="btn primary" data-run="${esc(c.id)}">${t("confirm")}</button></div>`;
+  } else {
+    const it = BYSIG[sheet.sig];
+    if (!it){ sheet = null; el.hidden = true; return; }
+    const [st, c] = stateOf(it);
+    h = `<p class="eyebrow">${esc(where(it))}</p><h3>${esc(it.name)}</h3>`;
+    if (it.t === "light"){
+      const n = (it.at || []).length + (it.segs || []).length;
+      h += `<div class="li"><span class="val ${c}">${st}</span>${sw(it)}</div>`;
+      if (n > 1) h += `<p class="note">${t("points_together", {n})}</p>`;
+      if (!canControl(cmdOf(it)) && !busy.has(cmdOf(it))) h += `<p class="note">${esc(ifaceMsg() || t("no_lamp_var"))}</p>`;
+    } else {
+      if (it.t !== "garage" || !RULES.garage) h += `<div class="li"><span>${t("state")}</span><span class="val ${c}">${st}</span></div>`;
+      if (it.t === "dev"){
+        const b = deviceBtn(it);
+        h += b ? `<div class="row-btns">${b}</div>` : `<p class="note">${esc(ifaceMsg() || t("no_dev_cmd"))}</p>`;
+      }
+      if (it.shutter){
+        const mv = shutterMove(it.shutter), up = shutterCmd(it.shutter, "up"), dn = shutterCmd(it.shutter, "down");
+        const s = PLAN.shutters[it.shutter] || {};
+        h += `<div class="li"><span>${t("shutter")}</span><span class="val">${mv === "up" ? t("shutter.raising") : mv === "down" ? t("shutter.lowering") : !s.out_up || val(s.out_up) === null ? t("st.unknown") : t("shutter.stopped")}</span></div>`;
+        h += `<div class="row-btns">${cbtn(up, t("shutter.up_btn"))}${cbtn(dn, t("shutter.down_btn"))}</div>`;
+      }
+      if (it.t === "garage" && RULES.garage) h += garageHTML();
+    }
+    if (it.guess) h += `<p class="note">${t("place_tbc")}</p>`;
+    h += `<code>${esc(it.sig)}</code>`;
+    if (isAdmin()) h += `<button class="link" data-ed="open" data-id="${it.id}">${t("edit_element")}</button>`;
+  }
+  setHTML($("#sheet-body"), h);
+}
+
+function render(){
+  if (!token) return;                 // nothing is shown while the page is locked
+  document.body.dataset.page = view;
+  document.body.dataset.panel = view === "home" ? "lights" : view;
+  renderConn(); renderAlert(); renderTiles(); renderPlan();
+  renderLights(); renderActions(); renderInfo(); renderLogs(); renderTabs(); renderEditBar(); renderSheet();
+}
+
+/* ---------- commands ---------- */
+let toastT;
+function toast(msg){ const el = $("#toast"); el.textContent = msg; el.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove("show"), 2600); }
+const detail = (d, r) => typeof d.detail === "string" ? d.detail : t("error", {code:r.status});
+
+async function api(path, opts = {}){
+  const headers = {...(opts.headers || {})};
+  if (token) headers.Authorization = "Bearer " + token;
+  const r = await fetch(path, {...opts, headers, cache:"no-store", credentials:"same-origin"});
+  if (r.status === 401 && token) lock(t("login.ended"));
+  return r;
+}
+// Sends to the server. `name` = name of the variable (also greys the button out while sending).
+async function send(name, body, okMsg){
+  const id = srv(name);
+  if (!id) return;
+  busy.add(name); render();
+  try {
+    const r = await api("api/cmd", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({...body, id})});
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) toast(detail(d, r));
+    else toast(d.note || okMsg + (d.effect === false ? t("no_visible") : ""));
+  } catch (e){
+    toast(t("server.down"));
+  }
+  busy.delete(name);
+  await poll();
+}
+function toggleLight(sig){
+  const v = val(sig), name = cmdOf(BYSIG[sig]);
+  if (v === null || !canControl(name)) return;
+  send(name, {on:!v}, t(v ? "light_off_t" : "light_on_t", {name:BYSIG[sig].name}));
+}
+// Command button: asks for a confirmation if the server requires it, else sends at once
+function askCmd(name){
+  if (!canControl(name)) return;
+  const c = CMDS[name] || {};
+  const on = c.tog ? !val(c.tog) : undefined;         // toggle: wanted state = the opposite of the shown state
+  if (c.tog && val(c.tog) === null) return;
+  if (needsConfirm(name)){ sheet = {cmd:name, on, back:sheet}; render(); return; }
+  runCmd(name, on);
+}
+function runCmd(name, on){
+  if (!canControl(name)) return;
+  const c = CMDS[name] || {group:"", label:name};
+  if (on === undefined && sheet && sheet.cmd === name) on = sheet.on;
+  const label = on === undefined ? c.label : on ? c.lon : c.loff;
+  // the sheet of a shutter, the garage or a device stays open to follow the effect
+  sheet = sheet && sheet.cmd ? (c.keep ? sheet.back || null : null) : (c.keep ? sheet : null);
+  send(name, {confirm:needsConfirm(name), ...(on === undefined ? {} : {on})}, t("sent", {what:`${c.group} · ${label}`}));
+}
+
+/* ---------- data ---------- */
+async function poll(){
+  if (!token) return;
+  try {
+    const r = await api("api/state");
+    if (r.status === 401) return;
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    S = await r.json();
+    setCommands(S.commands);
+    if (S.me) ME = S.me;
+    if (!isAdmin() && (editing || view === "logs")){ editing = false; placing = null; if (view === "logs") view = "home"; }
+    // plan edited by an admin (on another device): reloaded, except while editing
+    if (S.plan_rev !== undefined && S.plan_rev !== PLAN.rev && !(sheet && (sheet.edit || sheet.shutter)) && !placing) await loadPlan();
+    if (S.demo){ const b = $("#banner"); b.hidden = false; b.textContent = t("demo.banner"); }
+  } catch (e){
+    S = {...S, connected:false, error:t("server.down")};
+  }
+  render();
+}
+
+/* ---------- plan (loaded from the server) ---------- */
+async function loadPlan(){
+  try {
+    const r = await api("api/plan");
+    if (r.ok) buildPlan(await r.json());
+  } catch (e){ /* tried again at the next round */ }
+}
+
+/* ---------- edit mode (admins only; the server checks the role as well) ----------
+   Admins can: rename, move, change the state read and the command of any element, link a window
+   to a shutter, change the variables of a shutter, add and remove LAMPS and DEVICES.
+   The variables offered are those of the program (.tpy); the server refuses forbidden ones. */
+let editing = false, placing = null, VARS = null;
+// placing: next touch on the plan = position. kind: new | place | point | addpoint | move
+// Kinds of devices: same list as KINDS in app/plan.py → [letter, default icon]
+const KINDS = {socket:["S", "socket"], fan:["F", "fan"], heater:["H", "radiator"], pump:["P", "pump"], other:["D", "letter"]};
+// Icons of the devices: 24 × 24 drawings, strokes (class f = filled). Same list as ICONS in app/plan.py.
+const ICONS = {
+  socket:    `<circle cx="12" cy="12" r="8.5"/><circle class="f" cx="8.8" cy="12" r="1.5"/><circle class="f" cx="15.2" cy="12" r="1.5"/>`,
+  fan:       `<circle class="f" cx="12" cy="12" r="1.6"/><path d="M12 10.4C10.6 7.6 10.4 4.6 12.6 3.6c2.4-.9 3.6 2.2 1.4 5.2-.7 1-1.4 1.6-2 1.6zM13.5 12.8c3.1-.2 5.9 1 5.8 3.4-.1 2.5-3.4 2.4-5.3-.7-.6-1-.7-1.9-.5-2.7zM10.5 12.8c-1.8 2.5-4.4 4.1-6.1 2.4-1.7-1.9.6-4.4 4.2-3.9 1.2.2 1.9.8 1.9 1.5z"/>`,
+  radiator:  `<rect x="4" y="5.5" width="16" height="12" rx="2"/><path d="M8.5 5.5v12M12 5.5v12M15.5 5.5v12M6.5 17.5v2M17.5 17.5v2"/>`,
+  flame:     `<path d="M12 3c.6 3.2 5.5 5.4 5.5 10.2a5.5 5.5 0 0 1-11 0c0-2.6 1.4-4.3 2.6-5.3.2 1.9 1 3 2.3 3.3C10.8 8.6 11 5.6 12 3z"/>`,
+  drop:      `<path d="M12 3.5c-3 4.4-5.5 7.4-5.5 10.7a5.5 5.5 0 0 0 11 0c0-3.3-2.5-6.3-5.5-10.7z"/>`,
+  pump:      `<circle cx="12" cy="12" r="8.5"/><path d="M9.3 7.6 16.8 12l-7.5 4.4z"/>`,
+  snowflake: `<path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9M9.6 4.6 12 7l2.4-2.4M9.6 19.4 12 17l2.4 2.4"/>`,
+  bolt:      `<path d="M13.2 2.8 5.8 13.3h5.9l-.9 7.9 7.4-10.5h-5.9z"/>`,
+  plant:     `<path d="M12 21v-8.5M12 12.5c0-4.2 2.9-7.2 7.3-7.2 0 4.2-2.9 7.2-7.3 7.2zM12 15.2c0-3.3-2.3-5.6-5.8-5.6 0 3.3 2.3 5.6 5.8 5.6z"/>`,
+  screen:    `<rect x="3.5" y="4.5" width="17" height="11.5" rx="1.5"/><path d="M9 20h6M12 16v4"/>`,
+  washer:    `<rect x="5" y="3.5" width="14" height="17" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M8 6.8h2.5"/>`,
+  sun:       `<circle cx="12" cy="12" r="4"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M5.5 18.5l1.7-1.7M16.8 7.2l1.7-1.7"/>`,
+  letter:    "",
+};
+function iconOf(it){ return ICONS[it.icon] !== undefined && it.icon ? it.icon : (KINDS[it.kind] || KINDS.other)[1]; }   // icon drawn
+function iconSVG(key, it){                       // content of the drawing (24 × 24); "letter" = letter of the kind
+  if (key !== "letter") return ICONS[key];
+  return `<text class="ico-txt" x="12" y="12.5">${esc((KINDS[it.kind] || [])[0] || it.letter || "D")}</text>`;
+}
+const TYPE_CHOICES = ["light", "led", "socket", "fan", "heater", "pump", "other"];
+const LED_CM = 60;                               // length of a new LED on the plan
+function isLed(d){ return d.t === "light" && !!(d.segs || d.led); }   // LED = lamp drawn as a bar
+function what(d){                                // name of the kind of element
+  if (isLed(d)) return "LED";
+  if (d.t === "dev") return t("kind." + (KINDS[d.kind] ? d.kind : "other"));
+  return t("type." + d.t);
+}
+function forcedConfirm(d){                       // confirmation imposed by the rules (heater, pumps...)
+  const o = RULES.confirm_outputs || [];
+  return o.includes(d.sig);
+}
+
+async function loadVars(){
+  try {
+    const r = await api("api/variables");
+    VARS = r.ok ? await r.json() : null;
+  } catch (e){ VARS = null; }
+  if (!VARS) toast(t("ed.no_vars"));
+}
+async function setEditing(on){
+  if (on && !isAdmin()) return;
+  if (on && !VARS) await loadVars();
+  if (on && !VARS) return;
+  editing = on; placing = null; sheet = null; highlight = null;
+  render();
+}
+function edBtn(id){ return editing && id ? `<button class="btn ed-mini" data-ed="open" data-id="${id}">${t("edit")}</button>` : ""; }
+function draftOf(id){ return JSON.parse(JSON.stringify(BYID[id])); }
+async function openEdit(draft){
+  if (!VARS) await loadVars();
+  if (!VARS) return;
+  highlight = draft.sig || null;
+  sheet = {edit:true, draft};
+  render();
+}
+async function openShutter(n){
+  if (!VARS) await loadVars();
+  if (!VARS) return;
+  sheet = {shutter:n, draft:JSON.parse(JSON.stringify(PLAN.shutters[n]))};
+  render();
+}
+
+// <option>s of a list of variables; a current value missing in the program stays visible
+function opts(list, cur, none){
+  let h = none ? `<option value="">${esc(none)}</option>` : "", found = !cur;
+  for (const it of list){
+    const [n, c] = Array.isArray(it) ? it : [it, ""];
+    if (n === cur) found = true;
+    h += `<option value="${esc(n)}"${n === cur ? " selected" : ""}>${esc(n)}${c ? " — " + esc(c) : ""}</option>`;
+  }
+  if (!found) h = `<option value="${esc(cur)}" selected>${esc(t("ed.missing_var", {name:cur}))}</option>` + h;
+  return h;
+}
+function sigList(type){
+  return ["light", "dev"].includes(type) ? VARS.outputs : type === "tech" ? VARS.inputs.concat(VARS.outputs) : VARS.inputs;
+}
+function editHTML(d, sh){
+  const isNew = !d.id, lamp = d.t === "light", app = ["light", "dev"].includes(d.t), fl = FLOORS.find(f => f.id === d.floor);
+  const kind = app ? t("ed.output") : d.t === "tech" ? t("ed.in_out") : t("ed.input");
+  let h = `<p class="eyebrow">${isNew ? t("ed.new_device") : esc(what(d))}${fl ? " · " + esc(fl.name) : ""}</p>
+    <h3>${isNew ? t("ed.add_device") : t("ed.edit")}</h3>`;
+  if (app){                                      // lamp or device: the kind can change
+    const cur = isLed(d) ? "led" : lamp ? "light" : d.kind || "other";
+    h += `<label class="field">${t("ed.type")}<select id="ed-kind">${TYPE_CHOICES.map(k =>
+      `<option value="${k}"${k === cur ? " selected" : ""}>${t("choice." + k)}</option>`).join("")}</select></label>`;
+  }
+  if (lamp)                                      // a lamp keeps its light dot: say so, so the choice can be found
+    h += `<div class="field">${t("ed.icon")}<p class="note ico-note">${esc(t("ed.icon_hint", {what:isLed(d) ? t("ed.icon_led") : t("ed.icon_lamp")}))}</p></div>`;
+  if (d.t === "dev"){                            // icon on the plan
+    const cur = iconOf(d);
+    h += `<div class="field">${esc(t("ed.icon_named", {name:t("icon." + cur)}))}<div class="icons" role="radiogroup" aria-label="${t("ed.icon")}">${Object.keys(ICONS)
+      .map(k => `<button type="button" class="ico-btn" role="radio" aria-checked="${k === cur}" aria-label="${esc(t("icon." + k))}" title="${esc(t("icon." + k))}" data-ed="icon" data-icon="${k}"><svg viewBox="0 0 24 24">${iconSVG(k, d)}</svg></button>`).join("")}</div></div>`;
+  }
+  h += `<label class="field">${t("ed.name")}<input id="ed-name" maxlength="60" value="${esc(d.name || "")}"></label>
+    <label class="field">${esc(t("ed.state", {kind}))}<select id="ed-sig">${opts(sigList(d.t), d.sig || "", isNew ? t("ed.choose") : null)}</select></label>`;
+  if (["light", "dev", "tech"].includes(d.t))
+    h += `<label class="field">${esc(t("ed.command", {prefix:RULES.prefix}))}<select id="ed-cmd">${opts(VARS.commands, d.cmd || "", t("ed.none_ro"))}</select></label>`;
+  if (app){
+    const forced = forcedConfirm(d);
+    h += `<label class="check"><input type="checkbox" id="ed-confirm"${d.confirm || forced ? " checked" : ""}${forced ? " disabled" : ""}> ${t("ed.confirm")}${forced ? t("ed.confirm_forced") : ""}</label>`;
+  }
+  if (d.t === "contact"){
+    h += `<label class="field">${t("ed.shutter")}<select id="ed-shutter"><option value="">${t("ed.none")}</option>${Object.entries(PLAN.shutters)
+      .map(([n, s]) => `<option value="${n}"${String(d.shutter || "") === n ? " selected" : ""}>${n} · ${esc(s.name)}</option>`).join("")}</select></label>`;
+    if (d.shutter) h += `<button class="link" data-ed="shutter" data-n="${d.shutter}">${t("ed.shutter_vars", {n:d.shutter})}</button>`;
+  }
+  if (d.t !== "tech"){
+    h += `<div class="sub-h ed-sub">${t("ed.position")}</div>`;
+    if (noPos(d)) h += `<p class="note">${t("ed.not_placed")}</p>${app ? `<div class="row-btns"><button class="btn" data-ed="place">${t("ed.place")}</button></div>` : ""}`;
+    else if (d.at) h += d.at.map((pt, i) => `<div class="li"><span>${t("ed.point", {n:i + 1})}</span><span class="mini"><button class="btn" data-ed="point" data-i="${i}">${t("ed.move")}</button>${d.at.length > 1 ? `<button class="btn" data-ed="unpoint" data-i="${i}">${t("ed.remove_point")}</button>` : ""}</span></div>`).join("")
+      + (d.at.length < 12 ? `<div class="row-btns"><button class="btn" data-ed="addpoint">${t("ed.add_point")}</button></div>` : "");
+    else h += `<div class="row-btns"><button class="btn" data-ed="move">${t("ed.move")}</button>${app && d.x !== undefined ? `<button class="btn" data-ed="addpoint">${t("ed.add_point")}</button>` : ""}${d.segs && d.segs.length === 1 ? `<button class="btn" data-ed="rotate">${t("ed.rotate")}</button>` : ""}</div>`;
+  }
+  h += `<div class="row-btns ed-actions">${!isNew && app ? `<button class="btn danger" data-ed="del">${sh.confirmDel ? t("ed.confirm_delete") : t("ed.delete")}</button>` : ""}`
+     + `<button class="btn" data-close>${t("cancel")}</button><button class="btn primary" data-ed="save">${t("save")}</button></div>`;
+  return h;
+}
+function shutterHTML(n, s){
+  return `<p class="eyebrow">${t("shutter.n", {n})}</p><h3>${t("ed.edit_shutter")}</h3>
+    <label class="field">${t("ed.name")}<input id="sh-name" maxlength="40" value="${esc(s.name || "")}"></label>
+    <label class="field">${t("ed.cmd_up")}<select id="sh-up">${opts(VARS.commands, s.up || "", t("ed.none"))}</select></label>
+    <label class="field">${t("ed.cmd_down")}<select id="sh-down">${opts(VARS.commands, s.down || "", t("ed.none"))}</select></label>
+    <label class="field">${t("ed.motor_up")}<select id="sh-oup">${opts(VARS.outputs, s.out_up || "", t("ed.none"))}</select></label>
+    <label class="field">${t("ed.motor_down")}<select id="sh-odown">${opts(VARS.outputs, s.out_down || "", t("ed.none"))}</select></label>
+    <div class="row-btns ed-actions"><button class="btn" data-close>${t("cancel")}</button><button class="btn primary" data-ed="saveshutter">${t("save")}</button></div>`;
+}
+function historyHTML(h, sh){
+  let out = `<p class="eyebrow">${t("hist.version", {rev:h.rev})}${PLAN.author ? ` · ${esc(PLAN.author)}, ${esc(fmtDate(PLAN.date))}` : ""}</p><h3>${t("hist.title")}</h3>`;
+  if (PLAN.summary) out += `<p class="note">${esc(t("hist.last", {s:PLAN.summary}))}</p>`;
+  if (!h.versions.length) return out + `<p class="note">${t("hist.none")}</p>`;
+  return out + h.versions.map(v => `<div class="li"><span>${t("hist.item", {rev:v.rev})} · ${esc(v.author || t("hist.start"))}${v.date ? ", " + esc(fmtDate(v.date)) : ""}
+    ${v.summary ? `<br><span class="muted">${esc(v.summary)}</span>` : ""}</span>
+    <button class="btn ed-mini" data-ed="restore" data-rev="${v.rev}">${sh.confirmRev === v.rev ? t("confirm") : t("hist.back")}</button></div>`).join("")
+    + `<p class="note">${t("hist.note")}</p>`;
+}
+function svgDraft(f, K){                       // element being edited: dotted outline
+  const d = (sheet && sheet.edit && sheet.draft) || (placing && placing.draft);
+  if (!d || d.floor !== f.id) return "";
+  const pts = d.at || (d.x !== undefined ? [[d.x, d.y]] : []);
+  let s = pts.map(([x, y]) => `<circle class="draft" cx="${x}" cy="${y}" r="${26 * K}"/>`).join("");
+  for (const sg of (d.segs || [])) s += `<line class="draft" x1="${sg[0]}" y1="${sg[1]}" x2="${sg[2]}" y2="${sg[3]}"/>`;
+  if (d.x1 !== undefined) s += `<line class="draft" x1="${d.x1}" y1="${d.y1}" x2="${d.x2}" y2="${d.y2}"/>`;
+  return s;
+}
+function renderEditBar(){
+  const el = $("#editbar"), b = $("#edit");
+  b.hidden = !isAdmin();
+  b.textContent = editing ? t("plan.done") : t("plan.edit");
+  el.hidden = !editing;
+  if (!editing) return;
+  setHTML(el, placing
+    ? `<span>${placing.kind === "new" || placing.kind === "place" ? t("ed.touch_place") : t("ed.touch_new")}</span><button class="btn" data-ed="cancelplace">${t("cancel")}</button>`
+    : `<span>${t("ed.bar")}</span><span class="eb-btns"><button class="btn" data-ed="new">${t("ed.add_device")}</button><button class="btn" data-ed="history">${t("ed.history")}</button></span>`);
+}
+
+// Reads the form open in the sheet and updates the draft
+function readForm(d){
+  const g = (id) => document.getElementById(id);
+  if (!d) return;
+  if (g("ed-kind")){
+    const k = g("ed-kind").value;
+    if (k === "light" || k === "led"){ d.t = "light"; delete d.kind; delete d.letter; delete d.icon; }
+    else { d.t = "dev"; d.kind = k; d.letter = KINDS[k][0]; }
+    if (k === "led") toBar(d); else toPoint(d);
+  }
+  if (g("ed-name")) d.name = g("ed-name").value.trim();
+  if (g("ed-sig")) d.sig = g("ed-sig").value;
+  if (g("ed-cmd")) d.cmd = g("ed-cmd").value || null;
+  if (g("ed-confirm") && !g("ed-confirm").disabled){ if (g("ed-confirm").checked) d.confirm = true; else delete d.confirm; }
+  if (g("ed-shutter")){ const v = g("ed-shutter").value; if (v) d.shutter = +v; else delete d.shutter; }
+  if (g("sh-name")){
+    d.name = g("sh-name").value.trim(); d.up = g("sh-up").value || null; d.down = g("sh-down").value || null;
+    d.out_up = g("sh-oup").value || null; d.out_down = g("sh-odown").value || null;
+  }
+}
+// LED ↔ other type: a bar of LED_CM centred on the old point, and back
+function toBar(d){
+  d.led = true;                                  // draft only: stays an LED even without a position
+  if (d.segs) return;
+  const c = d.at ? d.at[0] : d.x !== undefined ? [d.x, d.y] : null;
+  delete d.x; delete d.y; delete d.at;
+  if (c) d.segs = [[c[0] - LED_CM / 2, c[1], c[0] + LED_CM / 2, c[1]]];
+}
+function toPoint(d){
+  delete d.led;
+  if (!d.segs) return;
+  const s0 = d.segs[0];
+  d.x = Math.round((s0[0] + s0[2]) / 2); d.y = Math.round((s0[1] + s0[3]) / 2);
+  delete d.segs;
+}
+function startPlacing(kind, d, extra){
+  readForm(d);
+  if (d.floor && kind !== "place") floorId = d.floor;
+  placing = {kind, draft:d, ...(extra || {})};
+  sheet = null;
+  render();
+  if (!DESK.matches) $(".plan").scrollIntoView({block:"start", behavior:"smooth"});
+}
+function place(e){
+  const m = $("#svg").getScreenCTM();
+  if (!m) return;
+  const pt = new DOMPoint(e.clientX, e.clientY).matrixTransform(m.inverse());
+  const x = Math.round(pt.x), y = Math.round(pt.y), d = placing.draft, k = placing.kind;
+  if ((k === "point" || k === "addpoint" || k === "move") && d.floor !== floorId){ toast(t("ed.other_floor")); return; }
+  if ((k === "new" || k === "place") && isLed(d)){ d.floor = floorId; delete d.at; delete d.x; delete d.y; d.segs = [[x - LED_CM / 2, y, x + LED_CM / 2, y]]; }
+  else if (k === "new" || k === "place"){ d.floor = floorId; delete d.at; delete d.segs; d.x = x; d.y = y; }
+  else if (k === "point") d.at[placing.idx] = [x, y];
+  else if (k === "addpoint"){ if (!d.at){ d.at = [[d.x, d.y]]; delete d.x; delete d.y; } d.at.push([x, y]); }
+  else if (d.x1 !== undefined){                   // door / window: same length, same direction
+    const dx = Math.round(x - (d.x1 + d.x2) / 2), dy = Math.round(y - (d.y1 + d.y2) / 2);
+    d.x1 += dx; d.x2 += dx; d.y1 += dy; d.y2 += dy;
+  } else if (d.segs){                             // bar: moved as a whole
+    const s0 = d.segs[0], dx = Math.round(x - (s0[0] + s0[2]) / 2), dy = Math.round(y - (s0[1] + s0[3]) / 2);
+    d.segs = d.segs.map(sg => [sg[0] + dx, sg[1] + dy, sg[2] + dx, sg[3] + dy]);
+  } else { d.x = x; d.y = y; }
+  placing = null;
+  openEdit(d);
+}
+async function planOp(path, body, okMsg){
+  try {
+    const r = await api(path, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({rev:PLAN.rev, ...body})});
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok){
+      toast(detail(d, r));
+      if (r.status === 409){ await loadPlan(); render(); }
+      return false;
+    }
+    buildPlan({...d.plan, house:null}); sheet = null; highlight = null;
+    toast(d.note || okMsg); render();
+    return true;
+  } catch (e){ toast(t("server.down")); return false; }
+}
+async function openHistory(){
+  try {
+    const r = await api("api/plan/history");
+    if (r.ok){ sheet = {history:await r.json()}; render(); } else toast(t("error", {code:r.status}));
+  } catch (e){ toast(t("server.down")); }
+}
+async function editAction(a, el){
+  const d = sheet && sheet.draft;
+  switch (a){
+    case "new":  if (!VARS) await loadVars(); if (VARS){ placing = {kind:"new", draft:{t:"light", name:"", sig:"", cmd:null}}; sheet = null; render(); } break;
+    case "history": openHistory(); break;
+    case "icon": readForm(d); d.icon = el.dataset.icon; sheet = {...sheet, draft:d}; render(); break;
+    case "rotate": {                               // quarter turn around the middle of the bar
+      readForm(d);
+      const [x1, y1, x2, y2] = d.segs[0], cx = (x1 + x2) / 2, cy = (y1 + y2) / 2, dx = x2 - x1, dy = y2 - y1;
+      d.segs = [[Math.round(cx + dy / 2), Math.round(cy - dx / 2), Math.round(cx - dy / 2), Math.round(cy + dx / 2)]];
+      sheet = {...sheet, draft:d}; render(); break;
+    }
+    case "cancelplace": {
+      const dr = placing && placing.draft; placing = null;
+      if (dr && (dr.id || !noPos(dr))) openEdit(dr); else render();
+      break;
+    }
+    case "open": openEdit(draftOf(el.dataset.id)); break;
+    case "shutter": openShutter(el.dataset.n); break;
+    case "place": startPlacing("place", d); break;
+    case "point": startPlacing("point", d, {idx:+el.dataset.i}); break;
+    case "addpoint": startPlacing("addpoint", d); break;
+    case "move": startPlacing("move", d); break;
+    case "unpoint":
+      readForm(d); d.at.splice(+el.dataset.i, 1);
+      if (d.at.length === 1){ [d.x, d.y] = d.at[0]; delete d.at; }
+      sheet = {edit:true, draft:d}; render(); break;
+    case "save":
+      readForm(d);
+      if (!d.name) return toast(t("ed.give_name"));
+      if (!d.sig) return toast(t("ed.choose_state"));
+      planOp("api/plan/element", {element:d}, d.id ? t("ed.saved") : t("ed.added", {what:what(d)}));
+      break;
+    case "del":
+      readForm(d);
+      if (!sheet.confirmDel){ sheet = {...sheet, confirmDel:true}; render(); }
+      else planOp("api/plan/remove", {id:d.id}, t("ed.removed", {what:what(BYID[d.id])}));
+      break;
+    case "saveshutter":
+      readForm(d);
+      if (!d.name) return toast(t("ed.give_name"));
+      planOp("api/plan/shutter", {n:sheet.shutter, shutter:d}, t("ed.shutter_saved"));
+      break;
+    case "restore": {
+      const rv = +el.dataset.rev;
+      if (sheet.confirmRev !== rv){ sheet = {...sheet, confirmRev:rv}; render(); }
+      else planOp("api/plan/restore", {version:rv}, t("hist.restored", {rev:rv}));
+      break;
+    }
+  }
+}
+// Choosing the state of a new device: suggests the matching command and name
+document.addEventListener("change", (e) => {
+  const id = e.target.id;
+  if (id === "lf-user" || id === "lf-type"){
+    logFilter = {user:$("#lf-user").value, type:$("#lf-type").value}; loadLogs(false); return;
+  }
+  if (!sheet || !sheet.edit) return;
+  const d = sheet.draft;
+  if (id === "ed-sig"){
+    readForm(d);
+    const cand = VARS.commands.find(c => c.toLowerCase() === (RULES.prefix + d.sig).toLowerCase());
+    if (!d.id && cand) d.cmd = cand;
+    const com = (sigList(d.t).find(([n]) => n === d.sig) || [])[1];
+    if (!d.name && com) d.name = com.slice(0, 60);
+    sheet = {...sheet, draft:d}; render();
+  } else if (id === "ed-kind"){
+    const keep = d.t === "dev" && d.icon && d.icon !== (KINDS[d.kind] || KINDS.other)[1];   // icon chosen by hand
+    readForm(d);
+    if (!keep) delete d.icon;                                   // otherwise: the one of the new kind
+    if (!d.id){ if (d.t === "dev") d.confirm = true; else delete d.confirm; }   // new device: confirmation suggested
+    sheet = {...sheet, draft:d}; render();
+  } else if (id === "ed-shutter" || id === "ed-cmd"){ readForm(d); sheet = {...sheet, draft:d}; render(); }
+});
+
+/* ---------- Logs tab (admins) ---------- */
+let LOGS = {lines:[], more:false, accounts:[], elements:[]}, logFilter = {user:"", type:""}, logsLoaded = false;
+const LOG_TYPES = ["login", "command", "edit", "account", "denied", "house"];
+function fmtDate(ts){
+  const d = new Date(ts);
+  return isNaN(d) ? String(ts || "") : d.toLocaleString(LANG, {timeZone:TZ, day:"2-digit", month:"2-digit",
+    year:"2-digit", hour:"2-digit", minute:"2-digit", second:"2-digit"});
+}
+async function loadLogs(more){
+  if (!isAdmin()) return;
+  const q = new URLSearchParams({limit:"150"});
+  if (logFilter.user) q.set("user", logFilter.user);
+  if (logFilter.type) q.set("type", logFilter.type);
+  if (more && LOGS.lines.length) q.set("before", LOGS.lines[LOGS.lines.length - 1].t);
+  try {
+    const r = await api("api/log?" + q);
+    if (!r.ok) return;
+    const d = await r.json();
+    LOGS = {...d, lines:more ? LOGS.lines.concat(d.lines) : d.lines};
+    logsLoaded = true; render();
+  } catch (e){ toast(t("server.down")); }
+}
+function renderLogs(){
+  if (!isAdmin()){ setHTML($("#v-logs"), ""); return; }
+  let h = `<div class="head"><h2>${t("logs")}</h2><button class="btn" data-logs="refresh">${t("logs.refresh")}</button></div>
+    <div class="filters"><select id="lf-user" aria-label="${t("logs.who")}"><option value="">${t("logs.all")}</option>${[[t("logs.accounts"), LOGS.accounts], [t("logs.house"), LOGS.elements || []]]
+      .filter(([, l]) => l.length).map(([g, l]) => `<optgroup label="${esc(g)}">${l
+      .map(u => `<option value="${esc(u)}"${u === logFilter.user ? " selected" : ""}>${esc(u)}</option>`).join("")}</optgroup>`).join("")}</select>
+    <select id="lf-type" aria-label="${t("logs.event")}"><option value="">${t("logs.all_events")}</option>${LOG_TYPES
+      .map(k => `<option value="${k}"${k === logFilter.type ? " selected" : ""}>${t("log." + k)}</option>`).join("")}</select></div>`;
+  if (!logsLoaded) h += `<p class="note">${t("logs.loading")}</p>`;
+  else if (!LOGS.lines.length) h += `<p class="note">${t("logs.none")}</p>`;
+  else h += `<div class="list">${LOGS.lines.map(l => `<div class="log"><div class="log-h"><span>${esc(fmtDate(l.t))}</span><span>${esc(l.user || "—")}</span>`
+      + `<span class="tag">${esc(LOG_TYPES.includes(l.type) ? t("log." + l.type) : l.type)}</span></div><div class="log-e">${esc(l.evt)}</div>`
+      + `${l.res ? `<div class="log-r${l.type === "house" || l.res === "ok" || l.res === "sent" || l.res === "envoyée" ? "" : " warn"}">${esc(l.res)}</div>` : ""}</div>`).join("")}</div>`
+      + (LOGS.more ? `<div class="row-btns"><button class="btn" data-logs="more">${t("logs.more")}</button></div>` : "");
+  h += `<p class="note">${t("logs.note")}</p>`;
+  setHTML($("#v-logs"), h);
+}
+
+/* ---------- interactions ---------- */
+function setView(v){
+  view = v; sheet = null;
+  if (v === "logs") loadLogs(false);
+  render();
+  if (!DESK.matches) window.scrollTo(0, 0);
+}
+
+function nearest(e, px){
+  const svg = $("#svg"), m = svg.getScreenCTM();
+  if (!m || !HITS.length) return null;
+  const p = new DOMPoint(e.clientX, e.clientY).matrixTransform(m.inverse());
+  const thr = px / m.a;
+  let best = null, bd = Infinity;
+  for (const h of HITS){
+    let d;
+    if (h.seg){
+      const [x1, y1, x2, y2] = h.seg, dx = x2 - x1, dy = y2 - y1, l = dx * dx + dy * dy;
+      const k = l ? Math.max(0, Math.min(1, ((p.x - x1) * dx + (p.y - y1) * dy) / l)) : 0;
+      d = Math.hypot(p.x - (x1 + k * dx), p.y - (y1 + k * dy));
+    } else d = Math.hypot(p.x - h.x, p.y - h.y);
+    if (d < bd){ bd = d; best = h; }
+  }
+  return bd <= thr ? best : null;
+}
+
+const tip = $("#tip"), svgEl = $("#svg");
+$("#floors").setAttribute("aria-label", t("floors"));
+$("#tabs").setAttribute("aria-label", t("tabs"));
+svgEl.setAttribute("aria-label", t("plan.label"));
+$(".sheet-close").setAttribute("aria-label", t("close"));
+svgEl.addEventListener("mousemove", (e) => {
+  if (COARSE.matches) return;
+  const h = nearest(e, 18);
+  svgEl.classList.toggle("pointing", !!h);
+  if (!h){ tip.style.opacity = 0; return; }
+  const it = BYSIG[h.sig], [st] = stateOf(it);
+  tip.innerHTML = `<b>${esc(it.name)}</b><br>${esc(st)}`;
+  tip.style.left = Math.min(e.clientX + 14, innerWidth - tip.offsetWidth - 8) + "px";
+  tip.style.top = (e.clientY + 14) + "px"; tip.style.opacity = 1;
+});
+svgEl.addEventListener("mouseleave", () => tip.style.opacity = 0);
+svgEl.addEventListener("click", (e) => {
+  if (placing){ place(e); return; }                       // edit mode: choosing a position
+  const h = nearest(e, COARSE.matches ? 30 : 18);
+  if (!h) return;
+  tip.style.opacity = 0;
+  if (editing && BYSIG[h.sig]) openEdit(draftOf(BYSIG[h.sig].id));
+  else { sheet = {sig:h.sig}; render(); }
+});
+$("#sheet").addEventListener("click", (e) => { if (e.target.id === "sheet"){ sheet = null; render(); } });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && sheet){ sheet = null; render(); } });
+document.addEventListener("click", (e) => {
+  const el = e.target.closest("[data-light],[data-cmd],[data-run],[data-close],[data-filter],[data-view],[data-floor],[data-goto],[data-ed],[data-logs]");
+  if (!el) return;
+  const d = el.dataset;
+  if (d.ed){ editAction(d.ed, el); return; }
+  if (d.logs){ loadLogs(d.logs === "more"); return; }
+  if (d.light){ toggleLight(d.light); return; }
+  if (d.cmd){ askCmd(d.cmd); return; }
+  if (d.run){ runCmd(d.run); return; }
+  if ("close" in d){ sheet = null; highlight = editing ? null : highlight; render(); return; }
+  if (d.filter){ lightFilter = d.filter; render(); return; }
+  if (d.view){ setView(d.view); return; }
+  if (d.floor){ floorId = d.floor; highlight = null; history.replaceState(null, "", "#" + floorId); render(); return; }
+  if (d.goto){
+    floorId = d.goto; highlight = d.sig || null; history.replaceState(null, "", "#" + floorId);
+    if (DESK.matches) render(); else setView("home");
+    $(".plan").scrollIntoView({block:"start", behavior:"smooth"});
+  }
+});
+$("#edit").addEventListener("click", () => setEditing(!editing));
+$("#zoom").addEventListener("click", () => {
+  const p = $(".plan"), z = p.classList.toggle("zoomed");
+  $("#zoom").textContent = z ? t("plan.unzoom") : t("plan.zoom");
+  render();
+  const w = $("#svgwrap"); w.scrollLeft = z ? (w.scrollWidth - w.clientWidth) / 2 : 0;
+});
+addEventListener("hashchange", () => {
+  const h = location.hash.slice(1);
+  if (FLOORS.some(f => f.id === h) && h !== floorId){ floorId = h; highlight = null; render(); }
+});
+let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(render, 150); });
+DESK.addEventListener("change", render);
+
+/* ---------- login ---------- */
+function wipe(){
+  for (const id of ["#tiles", "#floors", "#svg", "#legend", "#v-lights", "#v-actions", "#v-info", "#v-logs", "#sheet-body", "#alert", "#tabs"]) $(id).innerHTML = "";
+  cache.clear();
+}
+function lock(msg){
+  if (token) fetch("api/logout", {method:"POST", headers:{Authorization:"Bearer " + token}, cache:"no-store"}).catch(() => {});
+  token = null; sheet = null; busy.clear();
+  editing = false; placing = null; VARS = null; ME = {user:"", group:"user"};
+  LOGS = {lines:[], more:false, accounts:[], elements:[]}; logsLoaded = false;
+  buildPlan({rev:0, elements:[], shutters:{}});
+  S = {signals:{}, connected:false, ts:null, error:null};
+  setCommands({});
+  wipe();
+  document.body.classList.add("locked");
+  $("#lg-pass").value = "";
+  $("#lg-err").textContent = msg || "";
+  if (!COARSE.matches) $("#lg-user").focus();
+}
+async function unlock(tok, me){
+  token = tok; ME = me;
+  S = {signals:{}, connected:false, ts:null, error:t("conn.connecting")};
+  setCommands({});
+  document.body.classList.remove("locked");
+  await loadPlan();
+  render();
+  poll();
+}
+$("#login-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const u = $("#lg-user").value.trim(), p = $("#lg-pass").value;
+  if (!u || !p){ $("#lg-err").textContent = t("login.missing"); return; }
+  $("#lg-btn").disabled = true; $("#lg-err").textContent = "";
+  try {
+    const r = await fetch("api/login", {method:"POST", headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({username:u, password:p}), cache:"no-store", credentials:"same-origin"});
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok){ $("#lg-err").textContent = detail(d, r); return; }
+    unlock(d.token, {user:d.user, group:d.group});
+  } catch (err){
+    $("#lg-err").textContent = t("server.down") + ".";
+  } finally {
+    $("#lg-btn").disabled = false;
+  }
+});
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden){ hiddenAt = Date.now(); return; }
+  if (token && hiddenAt && Date.now() - hiddenAt > LOCK_AFTER_MS) lock(t("login.again"));
+  hiddenAt = null;
+});
+addEventListener("pageshow", (e) => { if (e.persisted && token) lock(); });   // browser "back"
+
+lock();
+setInterval(poll, 2000);
+</script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+[Unit]
+Description=home-web: web interface of a house run by a Beckhoff controller
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=homeweb
+Group=homeweb
+WorkingDirectory=/opt/home-web
+EnvironmentFile=/etc/home-web.env
+# Listens locally only: access goes through "tailscale serve" (HTTPS), never through the network
+ExecStart=/opt/home-web-venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8080 --workers 1 --no-server-header
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictSUIDSGID=true
+RestrictRealtime=true
+LockPersonality=true
+SystemCallArchitectures=native
+UMask=0077
+# Plan, plan history and log: /var/lib/home-web
+StateDirectory=home-web
+StateDirectoryMode=0750
+
+[Install]
+WantedBy=multi-user.target

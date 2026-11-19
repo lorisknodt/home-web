@@ -1,0 +1,596 @@
+{
+ "rev": 0,
+ "format": 1,
+ "elements": [
+  {
+   "id": "e1",
+   "floor": "ground",
+   "t": "contact",
+   "name": "Front door",
+   "sig": "DI_FrontDoor",
+   "x1": 800,
+   "y1": 850,
+   "x2": 890,
+   "y2": 850,
+   "out": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "e2",
+   "floor": "ground",
+   "t": "contact",
+   "name": "Living room patio door",
+   "sig": "DI_Living_PatioDoor",
+   "x1": 120,
+   "y1": 0,
+   "x2": 300,
+   "y2": 0,
+   "out": [
+    0,
+    -1
+   ],
+   "shutter": 1
+  },
+  {
+   "id": "e3",
+   "floor": "ground",
+   "t": "contact",
+   "name": "Living room window",
+   "sig": "DI_Living_Window",
+   "x1": 400,
+   "y1": 0,
+   "x2": 540,
+   "y2": 0,
+   "out": [
+    0,
+    -1
+   ],
+   "shutter": 2
+  },
+  {
+   "id": "e4",
+   "floor": "ground",
+   "t": "contact",
+   "name": "Kitchen window",
+   "sig": "DI_Kitchen_Window",
+   "x1": 800,
+   "y1": 0,
+   "x2": 950,
+   "y2": 0,
+   "out": [
+    0,
+    -1
+   ],
+   "shutter": 3
+  },
+  {
+   "id": "e5",
+   "floor": "ground",
+   "t": "contact",
+   "name": "Office window",
+   "sig": "DI_Office_Window",
+   "x1": 0,
+   "y1": 610,
+   "x2": 0,
+   "y2": 740,
+   "out": [
+    -1,
+    0
+   ]
+  },
+  {
+   "id": "e6",
+   "floor": "ground",
+   "t": "contact",
+   "name": "Garage back door",
+   "sig": "DI_Garage_BackDoor",
+   "x1": 1450,
+   "y1": 400,
+   "x2": 1450,
+   "y2": 490,
+   "out": [
+    1,
+    0
+   ]
+  },
+  {
+   "id": "e7",
+   "floor": "ground",
+   "t": "garage",
+   "name": "Garage door",
+   "sig": "DI_GarageDoor_Open",
+   "x1": 1150,
+   "y1": 850,
+   "x2": 1400,
+   "y2": 850,
+   "out": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "e8",
+   "floor": "ground",
+   "t": "light",
+   "name": "Living room ceiling",
+   "sig": "DO_Living_Ceiling",
+   "cmd": "HMI_DO_Living_Ceiling",
+   "x": 325,
+   "y": 250
+  },
+  {
+   "id": "e9",
+   "floor": "ground",
+   "t": "light",
+   "name": "Living room spots",
+   "sig": "DO_Living_Spots",
+   "cmd": "HMI_DO_Living_Spots",
+   "at": [
+    [
+     150,
+     110
+    ],
+    [
+     500,
+     110
+    ]
+   ]
+  },
+  {
+   "id": "e10",
+   "floor": "ground",
+   "t": "light",
+   "name": "Kitchen spots",
+   "sig": "DO_Kitchen_Spots",
+   "cmd": "HMI_DO_Kitchen_Spots",
+   "at": [
+    [
+     760,
+     140
+    ],
+    [
+     990,
+     140
+    ],
+    [
+     760,
+     290
+    ],
+    [
+     990,
+     290
+    ]
+   ]
+  },
+  {
+   "id": "e11",
+   "floor": "ground",
+   "t": "light",
+   "name": "Worktop LED",
+   "sig": "DO_Kitchen_Led",
+   "cmd": "HMI_DO_Kitchen_Led",
+   "segs": [
+    [
+     830,
+     40,
+     1010,
+     40
+    ]
+   ]
+  },
+  {
+   "id": "e12",
+   "floor": "ground",
+   "t": "light",
+   "name": "Hall",
+   "sig": "DO_Hall",
+   "cmd": "HMI_DO_Hall",
+   "x": 860,
+   "y": 620
+  },
+  {
+   "id": "e13",
+   "floor": "ground",
+   "t": "light",
+   "name": "WC",
+   "sig": "DO_WC",
+   "cmd": "HMI_DO_WC",
+   "x": 600,
+   "y": 600
+  },
+  {
+   "id": "e14",
+   "floor": "ground",
+   "t": "light",
+   "name": "Laundry",
+   "sig": "DO_Laundry",
+   "cmd": "HMI_DO_Laundry",
+   "x": 515,
+   "y": 790
+  },
+  {
+   "id": "e15",
+   "floor": "ground",
+   "t": "light",
+   "name": "Office",
+   "sig": "DO_Office",
+   "cmd": "HMI_DO_Office",
+   "x": 190,
+   "y": 675
+  },
+  {
+   "id": "e16",
+   "floor": "ground",
+   "t": "light",
+   "name": "Garage tube light",
+   "sig": "DO_Garage_Tube",
+   "cmd": "HMI_DO_Garage_Tube",
+   "segs": [
+    [
+     1200,
+     520,
+     1350,
+     520
+    ]
+   ]
+  },
+  {
+   "id": "e17",
+   "floor": "ground",
+   "t": "light",
+   "name": "Entrance (outside)",
+   "sig": "DO_Out_Entrance",
+   "cmd": "HMI_DO_Out_Entrance",
+   "x": 760,
+   "y": 905
+  },
+  {
+   "id": "e18",
+   "floor": "ground",
+   "t": "light",
+   "name": "Terrace",
+   "sig": "DO_Out_Terrace",
+   "cmd": "HMI_DO_Out_Terrace",
+   "at": [
+    [
+     150,
+     -60
+    ],
+    [
+     500,
+     -60
+    ]
+   ]
+  },
+  {
+   "id": "e19",
+   "floor": "ground",
+   "t": "light",
+   "name": "Garage (outside)",
+   "sig": "DO_Out_Garage",
+   "cmd": "HMI_DO_Out_Garage",
+   "x": 1275,
+   "y": 905
+  },
+  {
+   "id": "e20",
+   "floor": "ground",
+   "t": "dev",
+   "name": "Terrace socket",
+   "sig": "DO_Terrace_Socket",
+   "kind": "socket",
+   "letter": "S",
+   "x": 45,
+   "y": 160,
+   "cmd": "HMI_DO_Terrace_Socket"
+  },
+  {
+   "id": "e21",
+   "floor": "ground",
+   "t": "fire",
+   "name": "Hall smoke detector",
+   "sig": "DI_Smoke_Hall",
+   "x": 760,
+   "y": 450
+  },
+  {
+   "id": "e22",
+   "floor": "first",
+   "t": "contact",
+   "name": "Bedroom 1 window",
+   "sig": "DI_Bed1_Window",
+   "x1": 150,
+   "y1": 0,
+   "x2": 300,
+   "y2": 0,
+   "out": [
+    0,
+    -1
+   ],
+   "shutter": 4
+  },
+  {
+   "id": "e23",
+   "floor": "first",
+   "t": "contact",
+   "name": "Bedroom 2 window",
+   "sig": "DI_Bed2_Window",
+   "x1": 850,
+   "y1": 0,
+   "x2": 1000,
+   "y2": 0,
+   "out": [
+    0,
+    -1
+   ]
+  },
+  {
+   "id": "e24",
+   "floor": "first",
+   "t": "contact",
+   "name": "Bedroom 3 window",
+   "sig": "DI_Bed3_Window",
+   "x1": 150,
+   "y1": 850,
+   "x2": 300,
+   "y2": 850,
+   "out": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "e25",
+   "floor": "first",
+   "t": "contact",
+   "name": "Bedroom 4 window",
+   "sig": "DI_Bed4_Window",
+   "x1": 590,
+   "y1": 850,
+   "x2": 740,
+   "y2": 850,
+   "out": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "e26",
+   "floor": "first",
+   "t": "light",
+   "name": "Bedroom 1",
+   "sig": "DO_Bed1",
+   "cmd": "HMI_DO_Bed1",
+   "x": 225,
+   "y": 190
+  },
+  {
+   "id": "e27",
+   "floor": "first",
+   "t": "light",
+   "name": "Bathroom",
+   "sig": "DO_Bath",
+   "cmd": "HMI_DO_Bath",
+   "x": 600,
+   "y": 200
+  },
+  {
+   "id": "e28",
+   "floor": "first",
+   "t": "light",
+   "name": "Mirror LED",
+   "sig": "DO_Bath_Mirror",
+   "cmd": "HMI_DO_Bath_Mirror",
+   "segs": [
+    [
+     540,
+     280,
+     660,
+     280
+    ]
+   ]
+  },
+  {
+   "id": "e29",
+   "floor": "first",
+   "t": "light",
+   "name": "Bedroom 2",
+   "sig": "DO_Bed2",
+   "cmd": "HMI_DO_Bed2",
+   "x": 925,
+   "y": 190
+  },
+  {
+   "id": "e30",
+   "floor": "first",
+   "t": "light",
+   "name": "Corridor",
+   "sig": "DO_Corridor",
+   "cmd": "HMI_DO_Corridor",
+   "at": [
+    [
+     220,
+     450
+    ],
+    [
+     660,
+     450
+    ]
+   ]
+  },
+  {
+   "id": "e31",
+   "floor": "first",
+   "t": "light",
+   "name": "Bedroom 3",
+   "sig": "DO_Bed3",
+   "cmd": "HMI_DO_Bed3",
+   "x": 225,
+   "y": 685
+  },
+  {
+   "id": "e32",
+   "floor": "first",
+   "t": "light",
+   "name": "Bedroom 4",
+   "sig": "DO_Bed4",
+   "cmd": "HMI_DO_Bed4",
+   "x": 665,
+   "y": 685
+  },
+  {
+   "id": "e33",
+   "floor": "first",
+   "t": "light",
+   "name": "Landing",
+   "sig": "DO_Landing",
+   "cmd": "HMI_DO_Landing",
+   "x": 935,
+   "y": 440
+  },
+  {
+   "id": "e34",
+   "floor": "first",
+   "t": "dev",
+   "name": "Bathroom fan",
+   "sig": "DO_Bath_Fan",
+   "kind": "fan",
+   "letter": "F",
+   "x": 710,
+   "y": 330,
+   "cmd": "HMI_DO_Bath_Fan"
+  },
+  {
+   "id": "e35",
+   "floor": "first",
+   "t": "dev",
+   "name": "Bathroom heater",
+   "sig": "DO_Bath_Heater",
+   "kind": "heater",
+   "letter": "H",
+   "x": 490,
+   "y": 330,
+   "cmd": "HMI_DO_Bath_Heater"
+  },
+  {
+   "id": "e36",
+   "floor": "first",
+   "t": "fire",
+   "name": "Corridor smoke detector",
+   "sig": "DI_Smoke_Corridor",
+   "x": 110,
+   "y": 450
+  },
+  {
+   "id": "e37",
+   "floor": "basement",
+   "t": "light",
+   "name": "Cellar",
+   "sig": "DO_Cellar",
+   "cmd": "HMI_DO_Cellar",
+   "x": 325,
+   "y": 200
+  },
+  {
+   "id": "e38",
+   "floor": "basement",
+   "t": "light",
+   "name": "Workshop",
+   "sig": "DO_Workshop",
+   "cmd": "HMI_DO_Workshop",
+   "x": 325,
+   "y": 625
+  },
+  {
+   "id": "e39",
+   "floor": "basement",
+   "t": "light",
+   "name": "Boiler room",
+   "sig": "DO_Boiler",
+   "cmd": "HMI_DO_Boiler",
+   "x": 875,
+   "y": 190
+  },
+  {
+   "id": "e40",
+   "floor": "basement",
+   "t": "light",
+   "name": "Storage room",
+   "sig": "DO_Storage",
+   "cmd": "HMI_DO_Storage",
+   "x": 820,
+   "y": 620
+  },
+  {
+   "id": "e41",
+   "floor": "basement",
+   "t": "dev",
+   "name": "Heating pump",
+   "sig": "DO_Heating_Pump",
+   "kind": "pump",
+   "letter": "P",
+   "x": 1030,
+   "y": 320,
+   "cmd": "HMI_DO_Heating_Pump"
+  },
+  {
+   "id": "e42",
+   "floor": "basement",
+   "t": "water",
+   "name": "Water detector",
+   "sig": "DI_Water_Leak",
+   "x": 700,
+   "y": 320
+  },
+  {
+   "id": "e43",
+   "floor": null,
+   "t": "tech",
+   "name": "Solar panels",
+   "sig": "DI_Solar_Inverter",
+   "on": "Producing",
+   "off": "Idle"
+  },
+  {
+   "id": "e44",
+   "floor": null,
+   "t": "tech",
+   "name": "Network switch power",
+   "sig": "DO_Network_Power",
+   "on": "On",
+   "off": "Off"
+  }
+ ],
+ "shutters": {
+  "1": {
+   "name": "Living room patio door",
+   "up": "HMI_DO_Shutter1_Up",
+   "down": "HMI_DO_Shutter1_Down",
+   "out_up": "DO_Shutter1_Up",
+   "out_down": "DO_Shutter1_Down"
+  },
+  "2": {
+   "name": "Living room window",
+   "up": "HMI_DO_Shutter2_Up",
+   "down": "HMI_DO_Shutter2_Down",
+   "out_up": "DO_Shutter2_Up",
+   "out_down": "DO_Shutter2_Down"
+  },
+  "3": {
+   "name": "Kitchen",
+   "up": "HMI_DO_Shutter3_Up",
+   "down": "HMI_DO_Shutter3_Down",
+   "out_up": "DO_Shutter3_Up",
+   "out_down": "DO_Shutter3_Down"
+  },
+  "4": {
+   "name": "Bedroom 1",
+   "up": "HMI_DO_Shutter4_Up",
+   "down": "HMI_DO_Shutter4_Down",
+   "out_up": "DO_Shutter4_Up",
+   "out_down": "DO_Shutter4_Down"
+  }
+ }
+}

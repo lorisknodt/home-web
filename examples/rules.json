@@ -1,0 +1,72 @@
+{
+ "_doc": "House rules for home-web. Fixed safety rules that admins cannot change from the page. See docs/HOW-IT-WORKS.md, section 'Rules file'.",
+ "command_prefix": "HMI_",
+ "version_prefix": "HMI_Version_",
+
+ "forbidden_outputs": {
+  "DO_Network_Power": "powers the network switch of the PLC: switching it off would cut the link",
+  "DO_Siren": "alarm siren",
+  "DO_Doorbell": "doorbell",
+  "DO_Garage_Motor": "garage door motor: use the garage door buttons",
+  "DO_Garage_Button": "garage door: use the garage door buttons"
+ },
+
+ "confirm_outputs": {
+  "DO_Bath_Heater": "Bathroom heater",
+  "DO_Bath_Fan": "Bathroom fan",
+  "DO_Terrace_Socket": "Terrace socket",
+  "DO_Heating_Pump": "Heating pump"
+ },
+
+ "functions": [
+  {"var": "HMI_Alarm_Toggle", "group": {"en": "Alarm", "fr": "Alarme"}, "toggle": true,
+   "state": ["HMI_Alarm_Active"], "confirm": true, "tile": {"en": "On", "fr": "Activée"},
+   "address": "%MX114.0", "plc_comment": "Alarm on/off (pulse = toggle)"},
+  {"var": "HMI_NightAlarm_Toggle", "group": {"en": "Night alarm (upstairs)", "fr": "Alarme de nuit (étage)"}, "toggle": true,
+   "state": ["HMI_NightAlarm_Active"], "confirm": true, "tile": {"en": "Night", "fr": "Nuit"},
+   "address": "%MX114.1", "plc_comment": "Night alarm on/off (pulse = toggle)"},
+  {"var": "HMI_Holiday_Toggle", "group": {"en": "Holiday mode", "fr": "Mode vacances"}, "toggle": true,
+   "state": ["HMI_Holiday_Active"], "confirm": true,
+   "address": "%MX114.2", "plc_comment": "Holiday mode on/off (pulse = toggle)"},
+  {"var": "HMI_AllLightsOff", "group": {"en": "Lights", "fr": "Lumières"}, "label": {"en": "All off", "fr": "Tout éteindre"},
+   "effect": "lights_off", "address": "%MX115.0", "plc_comment": "All lights off"},
+  {"var": "HMI_OutsideLightsOn", "group": {"en": "Lights", "fr": "Lumières"}, "label": {"en": "Outside on", "fr": "Allumer l'extérieur"},
+   "effect": {"lights_on": ["DO_Out_Entrance", "DO_Out_Terrace", "DO_Out_Garage"]},
+   "address": "%MX115.1", "plc_comment": "Outside lights on"},
+  {"var": "HMI_ShuttersUp", "label": {"en": "All up", "fr": "Tout monter"}, "effect": {"shutters": "up"},
+   "address": "%MX116.0", "plc_comment": "All shutters up"},
+  {"var": "HMI_ShuttersDown", "label": {"en": "All down", "fr": "Tout descendre"}, "effect": {"shutters": "down"},
+   "address": "%MX116.1", "plc_comment": "All shutters down"},
+  {"var": "HMI_ShuttersUp_Living", "label": {"en": "Up: living room", "fr": "Monter : séjour"},
+   "effect": {"shutters": "up", "only": ["1", "2"]}, "address": "%MX116.2", "plc_comment": "Living room shutters up"},
+  {"var": "HMI_ClearFaults", "group": {"en": "Maintenance", "fr": "Maintenance"},
+   "label": {"en": "Clear the PLC fault log", "fr": "Effacer les défauts de l'automate"},
+   "confirm": true, "admin": true, "address": "%MX114.3", "plc_comment": "Clear fault log"}
+ ],
+
+ "garage": {
+  "open": "HMI_Garage_Open",
+  "close": "HMI_Garage_Close",
+  "sensor": "DI_GarageDoor_Open",
+  "sensor_open_value": true,
+  "motor": "DO_Garage_Motor",
+  "addresses": {"open": "%MX115.4", "close": "%MX115.3"}
+ },
+
+ "siren": {"output": "DO_Siren", "pause_s": 6, "label": {"en": "Alarm", "fr": "Alarme"}},
+
+ "alerts": {
+  "HMI_FireAlarm": {"en": "fire alarm", "fr": "alarme incendie"},
+  "HMI_WaterAlarm": {"en": "water alarm", "fr": "alarme eau"}
+ },
+
+ "states": {
+  "HMI_Alarm_Active": {"address": "%MX118.0", "plc_comment": "Alarm is on (copy of the internal state)"},
+  "HMI_NightAlarm_Active": {"address": "%MX118.1", "plc_comment": "Night alarm is on (copy)"},
+  "HMI_Holiday_Active": {"address": "%MX118.2", "plc_comment": "Holiday mode is on (copy)"},
+  "HMI_FireAlarm": {"address": "%MX118.5", "plc_comment": "Fire alarm triggered"},
+  "HMI_WaterAlarm": {"address": "%MX118.6", "plc_comment": "Water alarm triggered"}
+ },
+
+ "front_door": "DI_FrontDoor"
+}
